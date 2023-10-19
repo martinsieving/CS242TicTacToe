@@ -4,19 +4,29 @@ public class Event {
     enum EventStatus {
         PENDING, DECLINED, ACCEPTED, PLAYING, COMPLETED, ABORTED
     }
-    public int eventId;
-    public String sender;
-    public String opponent;
-    public EventStatus status;
-    public String turn;
-    public int move;
+    private int eventId;
+    private String sender;
+    private String opponent;
+    private EventStatus status;
+    private String turn;
+    private int move;
 
-    Event() {
-
+    Event()
+    {
+        this.eventId = new int();
+        this.sender = new String();
+        this.opponent = new String();
+        this.turn = new EventStatus();
+        this.move = new int();
     }
 
-    Event() {
-
+    Event(int eventId, String sender, String opponent, EventStatus status, String turn, int move)
+    {
+        this.eventId = eventId;
+        this.sender = sender;
+        this.opponent = opponent;
+        this.turn = turn;
+        this.move = move;
     }
 
     public int getEventId() {
