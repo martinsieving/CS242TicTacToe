@@ -1,2 +1,6 @@
-public class EventTest {
+package test;
+
+public class EventTest
+{
+    
 }

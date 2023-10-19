@@ -1,2 +1,6 @@
-public class SocketServerTest {
+package test;
+
+public class SocketServerTest
+{
+    
 }

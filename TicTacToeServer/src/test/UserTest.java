@@ -1,2 +1,6 @@
-public class UserTest {
+package test;
+
+public class UserTest
+{
+    
 }
