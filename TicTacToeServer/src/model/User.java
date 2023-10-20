@@ -7,17 +7,17 @@ public class User {
     private boolean online;
 
     User() {
-        username = "username";
-        password = "password";
-        displayName = "player";
-        online = false;
+        this.username = "username";
+        this.password = "password";
+        this.displayName = "player";
+        this.online = false;
     }
 
     User(String user, String pass, String display, boolean isOnline) {
-        username = user;
-        password = pass;
-        displayName = display;
-        online = isOnline;
+        this.username = user;
+        this.password = pass;
+        this.displayName = display;
+        this.online = isOnline;
     }
 
     public void setUsername(String newUsername) {
