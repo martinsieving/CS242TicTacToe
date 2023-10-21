@@ -7,16 +7,16 @@ public class GamingResponse extends Response
 
     GamingResponse()
     {
+        super();
         this.move = new int();
         this.active = new boolean();
-        super();
     }
 
-    GamingResponse(int move, boolean active)
+    GamingResponse(ResponseStatus status, String message, int move, boolean active)
     {
+        super(status, message);
         this.move = move;
         this.active = active;
-        super();
     }
 
     public void setMove(int move)
