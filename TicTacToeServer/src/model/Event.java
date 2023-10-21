@@ -1,7 +1,7 @@
 package model;
 
 public class Event {
-    enum EventStatus {
+    public enum EventStatus {
         PENDING, DECLINED, ACCEPTED, PLAYING, COMPLETED, ABORTED
     }
     private int eventId;

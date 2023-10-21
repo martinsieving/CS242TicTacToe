@@ -2,7 +2,7 @@ package socket;
 
 public class Request
 {
-    enum RequestType
+    public enum RequestType
     {
         LOGIN,
         REGISTER,

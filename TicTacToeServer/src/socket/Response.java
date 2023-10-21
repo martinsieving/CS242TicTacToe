@@ -2,7 +2,7 @@ package socket;
 
 public class Response
 {
-    enum ResponseStatus
+    public enum ResponseStatus
     {
         SUCCESS,
         FAILURE
