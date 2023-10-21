@@ -12,7 +12,7 @@ public class EventTest
         int eventIdTest = 3;
         String senderTest = "test sender";
         String opponentTest = "test opponent";
-        EventStatus statusTest = ABORTED;
+        Event.EventStatus statusTest = Event.EventStatus.ABORTED;
         String turnTest = "test turn";
         int moveTest = 4;
 

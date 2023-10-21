@@ -9,7 +9,7 @@ public class RequestTest
 
     public boolean test()
     {
-        int typeTest = 3;
+        Request.RequestType typeTest = Request.RequestType.ACKNOWLEDGE_RESPONSE;
         String dataTest = "test data";
 
         Request request1 = new Request();
@@ -21,13 +21,13 @@ public class RequestTest
 
         boolean everythingWorks = true;
 
-        if(request1.getType() != typeTest)
+        if(!request1.getType().equals(typeTest))
         {
             System.out.println("Problem with Request class type");
             everythingWorks = false;
         }
 
-        if(request2.getType() != typeTest)
+        if(!request2.getType().equals(typeTest))
         {
             System.out.println("Problem with Request class type");
             everythingWorks = false;

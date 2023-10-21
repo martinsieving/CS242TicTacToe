@@ -9,7 +9,7 @@ public class ResponseTest
 
     public boolean test()
     {
-        ResponseStatus statusTest = SUCCESS;
+        Response.ResponseStatus statusTest = Response.ResponseStatus.SUCCESS;
         String messageTest = "test message";
 
         Response response1 = new Response();
