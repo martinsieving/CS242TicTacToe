@@ -7,6 +7,10 @@ public class UserTest
     public UserTest() {
         
     }
+    
+    /** 
+     * @return boolean
+     */
     public boolean test() {
         String usernameTest = "test username";
         String passwordTest = "test password";

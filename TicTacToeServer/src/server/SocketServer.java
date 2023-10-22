@@ -30,6 +30,10 @@ public class SocketServer
 
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getPort()
     {
         return PORT;

@@ -19,21 +19,37 @@ public class GamingResponse extends Response
         this.active = active;
     }
 
+    
+    /** 
+     * @param move
+     */
     public void setMove(int move)
     {
         this.move = move;
     }
 
+    
+    /** 
+     * @param active
+     */
     public void setActive(boolean active)
     {
         this.active = active;
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getMove()
     {
         return move;
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean getActive()
     {
         return active;

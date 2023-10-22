@@ -9,6 +9,10 @@ public class ResponseTest
 
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean test()
     {
         ResponseStatus statusTest = ResponseStatus.SUCCESS;

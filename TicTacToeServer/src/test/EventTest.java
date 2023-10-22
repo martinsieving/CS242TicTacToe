@@ -9,6 +9,10 @@ public class EventTest
         
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean test()
     {
         int eventIdTest = 3;

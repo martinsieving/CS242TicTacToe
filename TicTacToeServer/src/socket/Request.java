@@ -33,21 +33,37 @@ public class Request
         this.data = data;
     }
 
+    
+    /** 
+     * @param type
+     */
     public void setType(RequestType type)
     {
         this.type = type;
     }
 
+    
+    /** 
+     * @param data
+     */
     public void setData(String data)
     {
         this.data = data;
     }
 
+    
+    /** 
+     * @return RequestType
+     */
     public RequestType getType()
     {
         return type;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getData()
     {
         return data;

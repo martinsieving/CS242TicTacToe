@@ -8,6 +8,10 @@ public class SocketServerTest
 
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean test()
     {
         int portTest = 6500;

@@ -23,21 +23,37 @@ public class Response
         this.message = message;
     }
 
+    
+    /** 
+     * @param status
+     */
     public void setStatus(ResponseStatus status)
     {
         this.status = status;
     }
 
+    
+    /** 
+     * @param message
+     */
     public void setMessage(String message)
     {
         this.message = message;
     }
 
+    
+    /** 
+     * @return ResponseStatus
+     */
     public ResponseStatus getStatus()
     {
         return status;
     }
 
+    
+    /** 
+     * @return String
+     */
     public String getMessage()
     {
         return message;

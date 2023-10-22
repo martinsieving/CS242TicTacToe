@@ -1,5 +1,9 @@
 package test;
 public class Main {
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         boolean allSuccess = true;
         EventTest test1 = new EventTest();

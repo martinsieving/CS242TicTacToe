@@ -8,6 +8,10 @@ public class RequestTest
 
     }
 
+    
+    /** 
+     * @return boolean
+     */
     public boolean test()
     {
         RequestType typeTest = RequestType.LOGIN;
