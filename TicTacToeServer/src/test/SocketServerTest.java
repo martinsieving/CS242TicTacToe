@@ -1,16 +1,27 @@
 package test;
 import server.SocketServer;
 
+/**
+ * SocketServerTest class
+ * Tests the getters and constructors for the SocketServer class
+ * @auhtor Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
+
 public class SocketServerTest
 {
+    /**
+     * default Constructor
+     */
     public SocketServerTest()
     {
 
     }
 
-    
     /** 
      * @return boolean
+     * true if all getters and constructors for the SocketServer class work as intended
+     * false otherwise
      */
     public boolean test()
     {
