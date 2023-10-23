@@ -1,15 +1,26 @@
 package test;
 import model.User;
 
+/**
+ * UserTest class
+ * Tests the getters, setters, and constructors for the User class
+ * @auhtor Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
+
 public class UserTest
 {
-
+    /**
+     * default Constructor
+     */
     public UserTest() {
         
     }
     
     /** 
      * @return boolean
+     * true if all getters, setters, and constructors for the User class work as intended
+     * false otherwise
      */
     public boolean test() {
         String usernameTest = "test username";

@@ -2,13 +2,16 @@ package test;
 
 /**
  * Main class
- * Runs all test classes, printing all success if there are no errors. 
+ * Contains the main method used for testing the Event, Request, Response, SocketServer, and User classes
  * @author Martin Sieving
  * Clarkson University CS 242, October 2023
  */
+
 public class Main {
     
     /** 
+     * main
+     * Runs the test functions for all Test classes; EventTest, RequestTest, ResponseTest, SocketServerTest, and UserTest
      * @param args
      */
     public static void main(String[] args) {

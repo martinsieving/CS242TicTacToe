@@ -2,8 +2,19 @@ package test;
 import model.Event;
 import model.Event.EventStatus;
 
+/**
+ * EventTest class
+ * Tests the getters, setters, constructors, and equals method for the Event class
+ * @auhtor Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
+
 public class EventTest
 {
+
+    /**
+     * default Constructor
+     */
     public EventTest()
     {
         
@@ -12,6 +23,8 @@ public class EventTest
     
     /** 
      * @return boolean
+     * true if all getters, setters, constructors, and equals methods of the Event class work as intended
+     * false otherwise
      */
     public boolean test()
     {

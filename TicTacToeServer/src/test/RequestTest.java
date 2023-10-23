@@ -1,16 +1,28 @@
 package test;
 import socket.Request;
 import socket.Request.RequestType;
+
+/**
+ * RequestTest class
+ * Tests getters, setters and constructors for Request class
+ * @auhtor Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
+
 public class RequestTest
 {
+    /**
+     * default Constructor
+     */
     public RequestTest()
     {
 
     }
-
     
     /** 
      * @return boolean
+     * true if all getters, setters, and constructors for the Request class work as intended
+     * false otherwise
      */
     public boolean test()
     {

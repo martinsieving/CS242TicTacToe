@@ -2,16 +2,27 @@ package test;
 import socket.Response;
 import socket.Response.ResponseStatus;
 
+/**
+ * ResponseTest class
+ * Tests getters, setters and constructors for Response class
+ * @auhtor Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
+
 public class ResponseTest
 {
+    /**
+     * default Constructor
+     */
     public ResponseTest()
     {
 
     }
-
     
     /** 
      * @return boolean
+     * true if all getters, setters, and constructors for the Response class work as intended
+     * false otherwise
      */
     public boolean test()
     {
