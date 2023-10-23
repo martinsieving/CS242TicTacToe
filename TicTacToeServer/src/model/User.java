@@ -7,9 +7,9 @@ public class User {
     private boolean online;
 
     public User() {
-        this.username = new String();
-        this.password = new String();
-        this.displayName = new String();
+        this.username = null;
+        this.password = null;
+        this.displayName = null;
         this.online = false;
     }
 

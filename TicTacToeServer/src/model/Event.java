@@ -14,10 +14,10 @@ public class Event {
     public Event()
     {
         this.eventId = 0;
-        this.sender = new String();
-        this.opponent = new String();
+        this.sender = null;
+        this.opponent = null;
         this.status = null;
-        this.turn = new String();
+        this.turn = null;
         this.move = 0;
     }
 
