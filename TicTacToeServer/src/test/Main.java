@@ -1,4 +1,11 @@
 package test;
+
+/**
+ * Main class
+ * Runs all test classes, printing all success if there are no errors. 
+ * @author Martin Sieving
+ * Clarkson University CS 242, October 2023
+ */
 public class Main {
     
     /** 
