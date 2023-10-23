@@ -51,7 +51,7 @@ public class Request
 
     /**
      * default Constructor
-     * sets both type and data data to null
+     * sets both type and data class variables to null
      */
     public Request()
     {
@@ -61,8 +61,8 @@ public class Request
 
     /**
      * Constructor
-     * @param type sets type data, represented as a RequestType enum
-     * @param data sets data data, represented as a String
+     * @param type sets type class variable, represented as a RequestType enum
+     * @param data sets data class variable, represented as a String
      */
     public Request(RequestType type, String data)
     {
@@ -71,7 +71,7 @@ public class Request
     }
     
     /** 
-     * @param type data, represented as a RequestType enum
+     * @param type class variable, represented as a RequestType enum
      */
     public void setType(RequestType type)
     {
@@ -79,7 +79,7 @@ public class Request
     }
     
     /** 
-     * @param data data, represented as a String
+     * @param data class variable, represented as a String
      */
     public void setData(String data)
     {
@@ -87,7 +87,7 @@ public class Request
     }
 
     /** 
-     * @return type data, represented as a RequestType enum
+     * @return type class variable, represented as a RequestType enum
      */
     public RequestType getType()
     {
@@ -95,7 +95,7 @@ public class Request
     }
     
     /** 
-     * @return data, represented as a String
+     * @return data class variable, represented as a String
      */
     public String getData()
     {

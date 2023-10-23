@@ -36,8 +36,8 @@ public class GamingResponse extends Response
      * Constructor
      * @param status sent to super constructor
      * @param message sent to super constructor
-     * @param move sets the move data, represented as an int
-     * @param active sets the active data, represented as a boolean 
+     * @param move sets the move class variable, represented as an int
+     * @param active sets the active class variable, represented as a boolean 
      */
     GamingResponse(ResponseStatus status, String message, int move, boolean active)
     {
@@ -47,7 +47,7 @@ public class GamingResponse extends Response
     }
 
     /** 
-     * @param move data, represented as an int
+     * @param move class variable, represented as an int
      */
     public void setMove(int move)
     {
@@ -55,7 +55,7 @@ public class GamingResponse extends Response
     }
     
     /** 
-     * @param active data, represented as a boolean
+     * @param active class variable, represented as a boolean
      */
     public void setActive(boolean active)
     {
@@ -63,7 +63,7 @@ public class GamingResponse extends Response
     }
     
     /** 
-     * @return move data, represented as an int
+     * @return move class variable, represented as an int
      */
     public int getMove()
     {
@@ -71,7 +71,7 @@ public class GamingResponse extends Response
     }
     
     /** 
-     * @return active data, represented as a boolean
+     * @return active class variable, represented as a boolean
      */
     public boolean getActive()
     {

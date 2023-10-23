@@ -42,8 +42,8 @@ public class Response
 
     /**
      * Constructor
-     * @param status sets the status data, represented as a ResponseStatus enum
-     * @param message set the message data, represented as a String
+     * @param status sets the status class variable, represented as a ResponseStatus enum
+     * @param message set the message class variable, represented as a String
      */
     public Response(ResponseStatus status, String message)
     {
@@ -52,7 +52,7 @@ public class Response
     }
     
     /** 
-     * @param status data, represented as a ResponseStatus enum
+     * @param status class variable, represented as a ResponseStatus enum
      */
     public void setStatus(ResponseStatus status)
     {
@@ -60,7 +60,7 @@ public class Response
     }
     
     /** 
-     * @param message data, represented as a String
+     * @param message class variable, represented as a String
      */
     public void setMessage(String message)
     {
@@ -68,7 +68,7 @@ public class Response
     }
     
     /** 
-     * @return status data, represented as a ResponseStatus enum
+     * @return status class variable, represented as a ResponseStatus enum
      */
     public ResponseStatus getStatus()
     {
@@ -76,7 +76,7 @@ public class Response
     }
     
     /** 
-     * @return message data, represented as a String
+     * @return message class variable, represented as a String
      */
     public String getMessage()
     {

@@ -48,7 +48,7 @@ public class SocketServer
     }
     
     /** 
-     * @return PORT data, represented as an int
+     * @return PORT class variable, represented as an int
      */
     public int getPort()
     {
