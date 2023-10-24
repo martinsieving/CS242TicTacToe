@@ -11,4 +11,4 @@ else:
 
 dir = os.getcwd()
 
-os.system('javadoc ../src/model/*.java ../src/server/*.java ../src/socket/*.java ../src/test/*.java')
+os.system('javadoc -author ../src/model/*.java ../src/server/*.java ../src/socket/*.java ../src/test/*.java')
