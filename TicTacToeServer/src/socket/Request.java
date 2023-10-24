@@ -12,30 +12,52 @@ public class Request
 {
     /**
      * RequestType enum
-     * LOGIN - sent when a user wants to log into the game
-     * REGISTER - sent when a user wants to register for the game for the first time
-     * UPDATE_PAIRING - request is sent periodically once the user is logged in to check pairing
-     * SEND_INVITATION - sent to the server by a player when a player selects an opponent
-     * ACCEPT_INVITATION - sent to the server by a player when a player accepts another players invitation 
-     * DECLINE_INVITATION - sent to the server by a player when a player declines another players invitation
-     * ACKNOWLEDGE_RESPONSE - client sends this to a server whenever they recieve a message as acknowledgement
-     * REQUEST_MOVE - sent periodically to the server during gameplay to request a game move be sent
-     * SEND_MOVE - sent to the server during gameplay to send a move
-     * ABORT_GAME - sent to the server whenever a user wants to abort a game
-     * COMPLETE_GAME - sent when a user recieves a final move indicating the game is over
      */
     public enum RequestType
     {
+        /**
+         * Sent when a user wants to log into the game
+         */
         LOGIN,
+        /**
+         * Sent when a user wants to register for the game for the first time
+         */
         REGISTER,
+        /**
+         * Sent periodically once the user is logged in to check pairing
+         */
         UPDATE_PAIRING,
+        /**
+         * Sent to the server by a player when a player selects an opponent
+         */
         SEND_INVITATION,
+        /**
+         * Sent to the server by a player when a player accepts another players invitation
+         */
         ACCEPT_INVITATION,
+        /**
+         * Sent to the server by a player when a player declines another players invitation
+         */
         DECLINE_INVITATION,
+        /**
+         * Client sends this to a server whenever they recieve a message as acknowledgement
+         */
         ACKNOWLEDGE_RESPONSE,
+        /**
+         * Sent periodically to the server during gameplay to request a game move be sent
+         */
         REQUEST_MOVE,
+        /**
+         * Sent to the server during gameplay to send a move
+         */
         SEND_MOVE,
+        /**
+         * Sent to the server whenever a user wants to abort a game
+         */
         ABORT_GAME,
+        /**
+         * Sent when a user recieves a final move indicating the game is over
+         */
         COMPLETE_GAME
     }
 
