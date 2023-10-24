@@ -7,3 +7,4 @@ To fix this we could check to ensure that PORT > 0 when accepting a value and th
 
 
 b.
+If run is not overridden, then the super classes implementation is used. The super class, Thread, is programmed to throw an exception whenever its implementation of run is used as every subclass of Thread should overide run. This causes the ServerHandler class to throw an error when run is not overridden.
