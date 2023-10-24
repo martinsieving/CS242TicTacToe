@@ -5,7 +5,7 @@ import socket.Response.ResponseStatus;
 /**
  * ResponseTest class
  * Tests getters, setters and constructors for Response class
- * @auhtor Alexander Odom
+ * @author Alexander Odom
  * Clarkson University CS 242, October 2023
  */
 

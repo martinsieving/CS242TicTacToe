@@ -4,7 +4,7 @@ import server.SocketServer;
 /**
  * SocketServerTest class
  * Tests the getters and constructors for the SocketServer class
- * @auhtor Alexander Odom
+ * @author Alexander Odom
  * Clarkson University CS 242, October 2023
  */
 

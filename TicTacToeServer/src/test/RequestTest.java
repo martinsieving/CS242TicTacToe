@@ -5,7 +5,7 @@ import socket.Request.RequestType;
 /**
  * RequestTest class
  * Tests getters, setters and constructors for Request class
- * @auhtor Alexander Odom
+ * @author Alexander Odom
  * Clarkson University CS 242, October 2023
  */
 

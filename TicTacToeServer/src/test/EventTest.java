@@ -5,7 +5,7 @@ import model.Event.EventStatus;
 /**
  * EventTest class
  * Tests the getters, setters, constructors, and equals method for the Event class
- * @auhtor Alexander Odom
+ * @author Alexander Odom
  * Clarkson University CS 242, October 2023
  */
 
