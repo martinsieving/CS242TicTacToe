@@ -9,13 +9,19 @@ package server;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.net.*;
 import javax.net.ssl.*;
 
 public class ServerHandler extends Thread
 {
+    private static Logger logger = Logger.getLogger(SocketServer.class.getName());
+
     private Socket socket;
     private String currentUsername;
+    private DataInputStream input;
+    private DataOutputStream output;
 
     /**
      * Constructor
@@ -26,6 +32,15 @@ public class ServerHandler extends Thread
     {
         this.socket = socket;
         this.currentUsername = currentUsername;
+        try
+        {
+            this.input = new DataInputStream(socket.getInputStream());
+            this.output = new DataOutputStream(socket.getOutputStream());
+        }
+        catch(Exception e)
+        {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
 
     public void run()
