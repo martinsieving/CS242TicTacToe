@@ -16,10 +16,13 @@ import javax.net.ssl.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import model.Event;
+
 public class ServerHandler extends Thread
 {
     private static Logger logger = Logger.getLogger(SocketServer.class.getName());
 
+    private static Event event;
     private Socket socket;
     private String currentUsername;
     private DataInputStream input;
@@ -40,6 +43,7 @@ public class ServerHandler extends Thread
             this.input = new DataInputStream(socket.getInputStream());
             this.output = new DataOutputStream(socket.getOutputStream());
             this.gson = new GsonBuilder().serializeNulls().create();
+            event = new Event(0, null, null, null, null, -1);
         }
         catch(Exception e)
         {
