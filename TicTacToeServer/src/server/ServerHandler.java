@@ -13,6 +13,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.*;
 import javax.net.ssl.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class ServerHandler extends Thread
 {
@@ -22,6 +24,7 @@ public class ServerHandler extends Thread
     private String currentUsername;
     private DataInputStream input;
     private DataOutputStream output;
+    private Gson gson;
 
     /**
      * Constructor
@@ -36,6 +39,7 @@ public class ServerHandler extends Thread
         {
             this.input = new DataInputStream(socket.getInputStream());
             this.output = new DataOutputStream(socket.getOutputStream());
+            this.gson = new GsonBuilder().serializeNulls().create();
         }
         catch(Exception e)
         {
