@@ -73,6 +73,8 @@ public class SocketServer
         {
             ServerHandler clientOne = new ServerHandler(serverSocket.accept(), "player1");
             ServerHandler clientTwo = new ServerHandler(serverSocket.accept(), "player2");
+            clientOne.start();
+            clientTwo.start();
         }
         catch(Exception e)
         {
