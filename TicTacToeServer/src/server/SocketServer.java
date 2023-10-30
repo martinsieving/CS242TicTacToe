@@ -7,9 +7,17 @@ package server;
  * Clarkson University CS 242, October 2023
  */
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.net.*;
+import javax.net.ssl.*;
+
+
 public class SocketServer
 {
-    private int PORT;
+    private static Logger logger = Logger.getLogger(SocketServer.class.getName());
+    private static int PORT = 5000;
+    private static ServerSocket serverSocket;
 
     /**
      * main method that instantiates this class
@@ -25,21 +33,35 @@ public class SocketServer
      */
     public SocketServer()
     {
-        this.PORT = 5000;
+        
     }
 
     /**
      * Constructor
      * @param PORT sets the PORT to the entered int value
      */
-    public SocketServer(int PORT)
+    public SocketServer(int PORT_) throws Exception
     {
-        this.PORT = PORT;
+        if(PORT_ < 0)
+        {
+            throw new Exception("Invalid PORT");
+        }
+        PORT = PORT_;
     }
 
+    /**
+     * setup initializes the serverSocket class variable
+     */
     public static void setup()
     {
-
+        try
+        {
+            serverSocket = new ServerSocket(PORT);
+        }
+        catch(Exception e)
+        {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
 
     public static void startAcceptingRequest()
