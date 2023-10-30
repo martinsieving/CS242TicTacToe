@@ -64,9 +64,20 @@ public class SocketServer
         }
     }
 
+    /**
+     * setup the two client ServerHandler threads
+     */
     public static void startAcceptingRequest()
     {
-
+        try
+        {
+            ServerHandler clientOne = new ServerHandler(serverSocket.accept(), "player1");
+            ServerHandler clientTwo = new ServerHandler(serverSocket.accept(), "player2");
+        }
+        catch(Exception e)
+        {
+            logger.log(Level.SEVERE, e.getMessage());
+        }
     }
     
     /** 
