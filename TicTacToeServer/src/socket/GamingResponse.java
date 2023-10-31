@@ -25,7 +25,7 @@ public class GamingResponse extends Response
      * calls default super constructor
      * sets move to 0 and active to false
      */
-    GamingResponse()
+    public GamingResponse()
     {
         super();
         this.move = 0;
@@ -39,7 +39,7 @@ public class GamingResponse extends Response
      * @param move sets the move class variable, represented as an int
      * @param active sets the active class variable, represented as a boolean 
      */
-    GamingResponse(ResponseStatus status, String message, int move, boolean active)
+    public GamingResponse(ResponseStatus status, String message, int move, boolean active)
     {
         super(status, message);
         this.move = move;

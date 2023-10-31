@@ -13,10 +13,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.*;
 import javax.net.ssl.*;
+import javax.sound.sampled.AudioFileFormat.Type;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import model.Event;
+import socket.GamingResponse;
+import socket.Request;
+import socket.Response;
+import socket.Response.ResponseStatus;;
 
 public class ServerHandler extends Thread
 {
@@ -51,13 +57,74 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * Continuosly read requests and sends responses until the client disconnects or sends an invalid request
+     */
     public void run()
     {
-
+        close();
     }
 
+    /**
+     * Closes io streams and the socket connection
+     */
     public void close()
     {
-        
+        input.close();
+        output.close();
+        socket.close();
     }
+
+    /**
+     * Handles message requests
+     * @param request
+     * @return
+     */
+    public Response handleRequest(Request request)
+    {
+        switch(request.getType())
+        {
+            case SEND_MOVE:
+                int move = gson.fromJson(request.getData(), int.class);
+                return handleSendMove(move);
+                break;
+            case REQUEST_MOVE:
+                return handleRequestMove();
+                break;
+            default:
+                return new Response(ResponseStatus.FAILURE, request.getData());
+                break;
+        }
+    }
+
+    /**
+     * handles request of type SEND_MOVE
+     * Updates the move and turn class variable's in event and returns a SUCCESS Response if the last turn was not taken by this user
+     * otherwise returns FAILURE Response
+     * @param int move
+     */
+    private Response handleSendMove(int move)
+    {
+        if(event.getTurn().equals(currentUsername))
+        {
+            logger.log(Level.WARNING, "It is not " + currentUsername + "'s turn");
+            return new Response(ResponseStatus.FAILURE, "It is not " + currentUsername + "'s turn");
+        }
+        event.setMove(move);
+        event.setTurn(currentUsername);
+        logger.log(Level.INFO, currentUsername + " performed move " + Integer.toString(move));
+        return new Response(ResponseStatus.SUCCESS, "move: " + Integer.toString(move) + ", turn: ");
+    }
+
+    /**
+     * handles request of type REQUEST_MOVE
+     * @param request
+     * @return
+     */
+    private GamingResponse handleRequestMove()
+    {
+        logger.log(Level.INFO, currentUsername + " is requesting a move");
+        return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", event.getMove(), true); 
+    }
+
 }
