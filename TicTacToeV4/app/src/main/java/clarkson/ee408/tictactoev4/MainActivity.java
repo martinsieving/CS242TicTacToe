@@ -19,12 +19,14 @@ public class MainActivity extends AppCompatActivity {
     private TicTacToe tttGame;
     private Button [][] buttons;
     private TextView status;
+    // create a new instance of Gson (task 2)
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        tttGame = new TicTacToe( );
+        tttGame = new TicTacToe(1);
         buildGuiByCode( );
+        // initialize Gson (task 2)
     }
 
     public void buildGuiByCode( ) {
