@@ -62,6 +62,10 @@ public class ServerHandler extends Thread
      */
     public void run()
     {
+        while(true)
+        {
+            break;
+        }
         close();
     }
 
@@ -89,7 +93,7 @@ public class ServerHandler extends Thread
                 return handleSendMove(move);
                 break;
             case REQUEST_MOVE:
-                return handleRequestMove();
+                GamingResponse response = handleRequestMove();
                 break;
             default:
                 return new Response(ResponseStatus.FAILURE, request.getData());
