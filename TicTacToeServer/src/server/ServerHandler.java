@@ -68,9 +68,15 @@ public class ServerHandler extends Thread
         {
             try
             {
-                Request request = gson.fromJson(input.readUTF(), Request.class);
+                String requestMessage = input.readUTF();
+                logger.log(Level.INFO, "Request recieved: " + requestMessage);
+                Request request = gson.fromJson(requestMessage, Request.class);
+
                 Response response = handleRequest(request);
-                output.writeUTF(gson.toJson(response, Response.class));
+                String responseMessage = gson.toJson(response, Response.class);
+                logger.log(Level.INFO, "Sending response: " + responseMessage);
+                output.writeUTF(responseMessage);
+                output.flush();
             }
             catch(EOFException eofe)
             {
@@ -166,6 +172,10 @@ public class ServerHandler extends Thread
     private GamingResponse handleRequestMove()
     {
         logger.log(Level.INFO, currentUsername + " is requesting a move");
+        if(event.getMove() > 0 || event.getMove() > 8)
+        {
+            event.setMove(-1);
+        }
         return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", event.getMove(), true); 
     }
 
