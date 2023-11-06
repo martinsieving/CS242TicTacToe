@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.net.*;
 import javax.net.ssl.*;
 import javax.sound.sampled.AudioFileFormat.Type;
@@ -22,7 +23,7 @@ import model.Event;
 import socket.GamingResponse;
 import socket.Request;
 import socket.Response;
-import socket.Response.ResponseStatus;;
+import socket.Response.ResponseStatus;
 
 public class ServerHandler extends Thread
 {
@@ -62,11 +63,19 @@ public class ServerHandler extends Thread
      */
     public void run()
     {
-        while(true)
+        try
         {
-            break;
+            while(true)
+            {
+                break;
+            }
+            throw new EOFException();
+            //close();
         }
-        close();
+        catch(EOFException eof)
+        {
+            close();
+        }
     }
 
     /**
@@ -74,9 +83,16 @@ public class ServerHandler extends Thread
      */
     public void close()
     {
-        input.close();
-        output.close();
-        socket.close();
+        try
+        {
+            input.close();
+            output.close();
+            socket.close();
+        }
+        catch(Exception eof)
+        {
+            System.err.println("Problem encountered when closing sockets");
+        }
     }
 
     /**
@@ -91,13 +107,11 @@ public class ServerHandler extends Thread
             case SEND_MOVE:
                 int move = gson.fromJson(request.getData(), int.class);
                 return handleSendMove(move);
-                break;
             case REQUEST_MOVE:
                 GamingResponse response = handleRequestMove();
-                break;
+                return response;
             default:
                 return new Response(ResponseStatus.FAILURE, request.getData());
-                break;
         }
     }
 
