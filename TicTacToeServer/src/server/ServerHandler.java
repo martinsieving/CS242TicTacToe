@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.IOException;
 import java.net.*;
 import javax.net.ssl.*;
 import javax.sound.sampled.AudioFileFormat.Type;
@@ -63,19 +64,24 @@ public class ServerHandler extends Thread
      */
     public void run()
     {
-        try
+        while(true)
         {
-            while(true)
+            try
+            {
+                Request request = gson.fromJson(input.readUTF(), Request.class);
+                Response response = handleRequest(request);
+                output.writeUTF(gson.toJson(response, Response.class));
+            }
+            catch(EOFException eofe)
             {
                 break;
             }
-            throw new EOFException();
-            //close();
+            catch(IOException ioe)
+            {
+                System.err.println("IOException occured");
+            }
         }
-        catch(EOFException eof)
-        {
-            close();
-        }
+        close();
     }
 
     /**
@@ -86,12 +92,29 @@ public class ServerHandler extends Thread
         try
         {
             input.close();
-            output.close();
-            socket.close();
+            logger.log(Level.INFO, "ServerHandler input stream closed");
         }
-        catch(Exception eof)
+        catch(IOException ioe)
         {
-            System.err.println("Problem encountered when closing sockets");
+            System.err.println("Problem encountered when closing input stream");
+        }
+        try
+        {
+            output.close();
+            logger.log(Level.INFO, "ServerHandler output stream closed");
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("Problem encountered when closing output stream");
+        }
+        try
+        {
+            socket.close();
+            logger.log(Level.INFO, "ServerHandler socket closed");
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("Problem encountered when closing socket");
         }
     }
 
