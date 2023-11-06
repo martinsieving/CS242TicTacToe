@@ -30,8 +30,6 @@ public class SocketServerTest
 
         try{
             SocketServer socketServer1 = new SocketServer();
-            SocketServer socketServer2 = new SocketServer(portTest);
-
             boolean everythingWorks = true;
 
             if(socketServer1.getPort() != defaultPort)
@@ -39,6 +37,8 @@ public class SocketServerTest
                 System.out.println("Problem with SockerServer class PORT");
                 everythingWorks = false;
             }
+            
+            SocketServer socketServer2 = new SocketServer(portTest);
 
             if(socketServer2.getPort() != portTest)
             {
