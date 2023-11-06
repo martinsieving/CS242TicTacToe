@@ -79,6 +79,7 @@ public class ServerHandler extends Thread
             catch(IOException ioe)
             {
                 System.err.println("IOException occured");
+                break;
             }
         }
         close();
