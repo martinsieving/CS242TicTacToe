@@ -42,7 +42,7 @@ public class ServerHandler extends Thread
      * @param socket sets the socket class variable
      * @param currentUsername sets the currentUsername class variable
      */
-    ServerHandler(Socket socket, String currentUsername)
+    public ServerHandler(Socket socket, String currentUsername)
     {
         this.socket = socket;
         this.currentUsername = currentUsername;
