@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +20,52 @@ public class MainActivity extends AppCompatActivity {
     private TicTacToe tttGame;
     private Button [][] buttons;
     private TextView status;
-    // create a new instance of Gson (task 2)
+    private Gson gson;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         tttGame = new TicTacToe(1);
         buildGuiByCode( );
-        // initialize Gson (task 2)
+        gson = new Gson();
+
+        Handler handler = new Handler();
+        boolean shouldRequestMove = true;
+        private Runnable runnableCode = new Runnable() {
+            @Override
+            public void run() {
+                if (shouldRequestMove) { 
+                    requestMove();
+                }
+                handler.postDelayed(this, 1000); 
+                // wait 1 second, can be lowered to make more real time
+            }
+        };
+        handler.post(runnableCode);
+
+        updateTurnStatus();
+    }
+
+    public void sendMove(move) {
+        Request request = new Reqeust();
+        request.setType(SEND_MOVE);
+        request.setData("move data");
+    }
+
+    public void requestMove() {
+        Request request = new Request();
+        request.setType(REQUEST_MOVE);
+        SocketClient sktclient = new SocketClient();
+        Response moveResponse = sktclient.sendRequest(request)
+        if (moveResponse.getStatus() == Response.SUCCESS) {
+            update(moveResponse.getMessage());
+        } 
+    }
+
+    public void updateTurnStatus() {
+        boolean isYourTurn = (tttGame.getTurn() == tttGame.getPlayer());
+        shouldRequestMove = isYourTurn;
+        enableButtons( isYourTurn );
     }
 
     public void buildGuiByCode( ) {
@@ -96,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void update( int row, int col ) {
+        updateTurnStatus();
         int play = tttGame.play( row, col );
         if( play == 1 )
             buttons[row][col].setText( "X" );
@@ -123,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void showNewGameDialog( ) {
         AlertDialog.Builder alert = new AlertDialog.Builder( this );
-        alert.setTitle( "This is fun" );
-        alert.setMessage( "Play again?" );
+        alert.setTitle(tttGame.result());
+        alert.setMessage( "Do you want to play again?" );
         PlayDialog playAgain = new PlayDialog( );
         alert.setPositiveButton( "YES", playAgain );
         alert.setNegativeButton( "NO", playAgain );
@@ -145,11 +185,15 @@ public class MainActivity extends AppCompatActivity {
     private class PlayDialog implements DialogInterface.OnClickListener {
         public void onClick( DialogInterface dialog, int id ) {
             if( id == -1 ) /* YES button */ {
+                if (tttGame.getPlayer == 1) {
+                    tttGame.setPlayer(2);
+                } else tttGame.setPlayer(1);
                 tttGame.resetGame( );
                 enableButtons( true );
                 resetButtons( );
                 status.setBackgroundColor( Color.GREEN );
                 status.setText( tttGame.result( ) );
+                updateTurnStatus();
             }
             else if( id == -2 ) // NO button
                 MainActivity.this.finish( );

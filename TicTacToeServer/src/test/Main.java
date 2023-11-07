@@ -9,7 +9,7 @@ package test;
 
 public class Main {
     
-    /** 
+    /**
      * main
      * Runs the test functions for all Test classes; EventTest, RequestTest, ResponseTest, SocketServerTest, and UserTest
      * @param args

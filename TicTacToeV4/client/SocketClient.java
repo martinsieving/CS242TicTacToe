@@ -18,7 +18,11 @@ public class SocketClient {
     private SocketClient() {
 
     }
+
     public static SocketClient getInstance() {
+        if (instance == null) {
+            instance = new SocketClient();
+        }
         return instance;
     }
 
@@ -26,7 +30,8 @@ public class SocketClient {
 
     }
 
-    responseClass sendRequest(request, responseClass) {
+    public Response sendRequest(Request request) {
+        AppExecutors appexecutors = new AppExecutors(/*disk, io, main*/);
 
     }
 }

@@ -103,7 +103,9 @@ public class TicTacToe {
             return "Player " + (1 + whoWon()) + " won";
         else if( canNotPlay( ) )
             return "Tie Game";
+        else if (this.turn == this.player)
+            return "Your Turn";
         else
-            return "PLAY !!";
+            return "Waiting for Opponent"
     }
 }
