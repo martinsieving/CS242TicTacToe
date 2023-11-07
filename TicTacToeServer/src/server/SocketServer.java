@@ -15,8 +15,17 @@ import java.net.*;
 
 public class SocketServer
 {
+    /**
+     * Responsible for logging important information
+     */
     private static Logger logger = Logger.getLogger(SocketServer.class.getName());
+    /**
+     * PORT used for socket connection
+     */
     private static int PORT = 5000;
+    /**
+     * ServerSocket that clients connect to
+     */
     private static ServerSocket serverSocket;
 
     /**
