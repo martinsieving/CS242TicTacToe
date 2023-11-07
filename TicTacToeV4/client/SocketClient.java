@@ -10,13 +10,25 @@ package client;
 
 public class SocketClient {
     private static SocketClient instance;
+    private AppExecutors appExecutors;
     private Socket socket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
-    private String gson; // not sure about type
+    private Gson gson;
 
     private SocketClient() {
-
+        appExecutors = AppExecutors.getInstance();
+        try
+        {
+            socket = new Socket("temporary", 5000);
+            input = new DataInputStream(socket.getInputStream());
+            output = new DataOutputStream(socket.getOutputStream());
+            gson = new GsonBuilder().serializeNulls().create();
+        }
+        catch(Exception e)
+        {
+            System.err.println(e.getMessage())
+        }
     }
 
     public static SocketClient getInstance() {
@@ -26,12 +38,38 @@ public class SocketClient {
         return instance;
     }
 
-    void close() {
-
+    void close()
+    {
+        try
+        {
+            input.close();
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("Problem encountered when closing input stream");
+        }
+        try
+        {
+            output.close();
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("Problem encountered when closing output stream");
+        }
+        try
+        {
+            socket.close();
+        }
+        catch(IOException ioe)
+        {
+            System.err.println("Problem encountered when closing socket");
+        }
     }
 
     public Response sendRequest(Request request) {
-        AppExecutors appexecutors = new AppExecutors(/*disk, io, main*/);
-
+        appExecutors.networkIO();
+        String requestMessage = gson.toJson(request, Request.class);
+        String responseMessage = "";
+        return gson.fromJson(responseMessage, Response.class);
     }
 }

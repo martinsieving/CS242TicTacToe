@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public void requestMove() {
         Request request = new Request();
         request.setType(REQUEST_MOVE);
-        SocketClient sktclient = new SocketClient();
+        SocketClient sktclient = SocketClient.getInstance();
         Response moveResponse = sktclient.sendRequest(request)
         if (moveResponse.getStatus() == Response.SUCCESS) {
             update(moveResponse.getMessage());
