@@ -65,13 +65,14 @@ public class SocketClient {
     }
 
     public <T> T sendRequest(Request request, T response) {
+        String requestMessage = gson.toJson(request, Request.class);
+        String responseMessage = "";
         AppExecutors appExecutors = AppExecutors.getInstance();
         appExecutors.networkIO().execute(new Runnable()
         {
             public void run()
             {
-                String requestMessage = gson.toJson(request, Request.class);
-                String responseMessage = "";
+                
             }
         });
         return gson.fromJson(responseMessage, T.class);
