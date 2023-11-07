@@ -15,6 +15,10 @@ public class SocketClient {
     private DataOutputStream outputStream;
     private Gson gson;
 
+    /**
+     * private constructor
+     * initializes socket, io streams, and gson serializer
+     */
     private SocketClient()
     {
         try
@@ -33,6 +37,9 @@ public class SocketClient {
         }
     }
 
+    /**
+     * @return instance of SocketClient
+     */
     public static SocketClient getInstance()
     {
         if (instance == null) {
@@ -41,6 +48,9 @@ public class SocketClient {
         return instance;
     }
 
+    /**
+     * closes socket and all io streams
+     */
     void close()
     {
         AppExecutors.getInstance().networkIO().execute(new Runnable(){
@@ -71,6 +81,11 @@ public class SocketClient {
         });
     }
 
+    /**
+     * Sends a request through socket, returns response of type type
+     * @param request request data
+     * @param type response class type
+     */
     public <T> T sendRequest(Request request, Class<T> type) {
         String requestMessage = gson.toJson(request, Request.class);
         String responseMessage = "";
