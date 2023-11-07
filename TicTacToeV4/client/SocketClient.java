@@ -66,10 +66,10 @@ public class SocketClient {
         }
     }
 
-    public Response sendRequest(Request request) {
+    public <T> T sendRequest(Request request, T response) {
         appExecutors.networkIO();
         String requestMessage = gson.toJson(request, Request.class);
         String responseMessage = "";
-        return gson.fromJson(responseMessage, Response.class);
+        return gson.fromJson(responseMessage, T.class);
     }
 }
