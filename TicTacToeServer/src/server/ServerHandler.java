@@ -172,11 +172,9 @@ public class ServerHandler extends Thread
     private GamingResponse handleRequestMove()
     {
         logger.log(Level.INFO, currentUsername + " is requesting a move");
-        if(event.getMove() > 0 || event.getMove() > 8)
-        {
-            event.setMove(-1);
-        }
-        return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", event.getMove(), true); 
+        int move = event.getMove();
+        event.setMove(-1);
+        return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", move, true); 
     }
 
 }
