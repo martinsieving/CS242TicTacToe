@@ -10,14 +10,12 @@ package client;
 
 public class SocketClient {
     private static SocketClient instance;
-    private AppExecutors appExecutors;
     private Socket socket;
     private DataInputStream inputStream;
     private DataOutputStream outputStream;
     private Gson gson;
 
     private SocketClient() {
-        appExecutors = AppExecutors.getInstance();
         try
         {
             socket = new Socket("temporary", 5000);
@@ -67,9 +65,15 @@ public class SocketClient {
     }
 
     public <T> T sendRequest(Request request, T response) {
-        appExecutors.networkIO();
-        String requestMessage = gson.toJson(request, Request.class);
-        String responseMessage = "";
+        AppExecutors appExecutors = AppExecutors.getInstance();
+        appExecutors.networkIO().execute(new Runnable()
+        {
+            public void run()
+            {
+                String requestMessage = gson.toJson(request, Request.class);
+                String responseMessage = "";
+            }
+        });
         return gson.fromJson(responseMessage, T.class);
     }
 }
