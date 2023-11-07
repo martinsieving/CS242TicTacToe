@@ -174,6 +174,10 @@ public class ServerHandler extends Thread
         logger.log(Level.INFO, currentUsername + " is requesting a move");
         int move = event.getMove();
         event.setMove(-1);
+        if(move < 0 || move > 8)
+        {
+            move = -1;
+        }
         return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", move, true); 
     }
 
