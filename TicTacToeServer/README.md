@@ -4,6 +4,7 @@ Martin Sieving
 Milestone 2
 
 1.
+We do not have a working TicTacToe system. We completed all parts of the milestone, but were unable to build the client side as we were unable to get the gradle script to find tge gson repository, despite copying the link given by the online maven repository. We were able to build the server side through the use of the command line but were unable to test how features of the server interact with the client. Although we were able to test serverside features that did not require the TicTacToeV4 build.
 
 2.
 It is no longer possible to manage game states between the two game boards without introducing the player attribute. The turn variable is enough information to determine whos turn it is, but the player attribute is needed to determine which player owns the game board.
