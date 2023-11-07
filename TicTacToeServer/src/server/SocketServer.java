@@ -1,17 +1,15 @@
 package server;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.net.*;
+
 /**
  * SocketServer class
  * This class is responsible for creating the socket server and accepts all client connections
  * @author Alexander Odom
  * Clarkson University CS 242, October 2023
  */
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.net.*;
-//import javax.net.ssl.*;
-
 
 public class SocketServer
 {
@@ -47,7 +45,7 @@ public class SocketServer
 
     /**
      * Constructor
-     * @param PORT sets the PORT to the entered int value
+     * @param PORT_ sets the PORT to the entered int value
      */
     public SocketServer(int PORT_) throws Exception
     {

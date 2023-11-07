@@ -9,4 +9,6 @@ else:
     os.system('mkdir doc')
     os.chdir('doc')
 
-os.system('javadoc -author ../src/model/*.java ../src/server/*.java ../src/socket/*.java ../src/test/*.java')
+dir = os.getcwd()
+
+os.system('javadoc -cp .;../lib/gson-2.10.1.jar -author ../src/model/*.java ../src/server/*.java ../src/socket/*.java ../src/test/*.java')

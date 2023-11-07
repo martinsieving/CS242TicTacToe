@@ -1,12 +1,5 @@
 package server;
 
-/**
- * ServerHandler class is a subclass of the Thread class
- * It is responsible for helping the SocketServer class handle individual user communication
- * @author Alexander Odom
- * Clarkson University CS 242, October 2023
- */
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.io.DataInputStream;
@@ -25,6 +18,13 @@ import socket.GamingResponse;
 import socket.Request;
 import socket.Response;
 import socket.Response.ResponseStatus;
+
+/**
+ * ServerHandler class is a subclass of the Thread class
+ * It is responsible for helping the SocketServer class handle individual user communication
+ * @author Alexander Odom
+ * Clarkson University CS 242, October 2023
+ */
 
 public class ServerHandler extends Thread
 {
