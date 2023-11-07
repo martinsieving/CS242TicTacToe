@@ -64,7 +64,7 @@ public class SocketClient {
         }
     }
 
-    public <T> T sendRequest(Request request, T response) {
+    public <T> T sendRequest(Request request, Class<T> type) {
         String requestMessage = gson.toJson(request, Request.class);
         String responseMessage = "";
         AppExecutors.getInstance().networkIO().execute(new Runnable()
