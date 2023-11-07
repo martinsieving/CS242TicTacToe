@@ -19,10 +19,13 @@ public class SocketClient {
     {
         try
         {
-            socket = new Socket("temporary", 5000);
-            input = new DataInputStream(socket.getInputStream());
-            output = new DataOutputStream(socket.getOutputStream());
-            gson = new GsonBuilder().serializeNulls().create();
+            AppExecutors.getInstance().networkIO().execute(new Runnable()
+            {
+                socket = new Socket("temporary", 5000);
+                input = new DataInputStream(socket.getInputStream());
+                output = new DataOutputStream(socket.getOutputStream());
+                gson = new GsonBuilder().serializeNulls().create();
+            });
         }
         catch(Exception e)
         {
@@ -40,30 +43,32 @@ public class SocketClient {
 
     void close()
     {
-        try
-        {
-            input.close();
-        }
-        catch(IOException ioe)
-        {
-            System.err.println("Problem encountered when closing input stream");
-        }
-        try
-        {
-            output.close();
-        }
-        catch(IOException ioe)
-        {
-            System.err.println("Problem encountered when closing output stream");
-        }
-        try
-        {
-            socket.close();
-        }
-        catch(IOException ioe)
-        {
-            System.err.println("Problem encountered when closing socket");
-        }
+        AppExecutors.getInstance().networkIO().execute(new Runnable(){
+            try
+            {
+                input.close();
+            }
+            catch(IOException ioe)
+            {
+                System.err.println("Problem encountered when closing input stream");
+            }
+            try
+            {
+                output.close();
+            }
+            catch(IOException ioe)
+            {
+                System.err.println("Problem encountered when closing output stream");
+            }
+            try
+            {
+                socket.close();
+            }
+            catch(IOException ioe)
+            {
+                System.err.println("Problem encountered when closing socket");
+            }
+        });
     }
 
     public <T> T sendRequest(Request request, Class<T> type) {
