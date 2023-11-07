@@ -15,7 +15,8 @@ public class SocketClient {
     private DataOutputStream outputStream;
     private Gson gson;
 
-    private SocketClient() {
+    private SocketClient()
+    {
         try
         {
             socket = new Socket("temporary", 5000);
@@ -29,7 +30,8 @@ public class SocketClient {
         }
     }
 
-    public static SocketClient getInstance() {
+    public static SocketClient getInstance()
+    {
         if (instance == null) {
             instance = new SocketClient();
         }
