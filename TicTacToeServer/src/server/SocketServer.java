@@ -10,7 +10,7 @@ package server;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.*;
-import javax.net.ssl.*;
+//import javax.net.ssl.*;
 
 
 public class SocketServer
