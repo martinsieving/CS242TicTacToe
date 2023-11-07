@@ -82,6 +82,6 @@ public class SocketClient {
                 }
             }
         });
-        return gson.fromJson(responseMessage, T.class);
+        return gson.fromJson(responseMessage, type);
     }
 }
