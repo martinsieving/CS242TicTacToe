@@ -12,6 +12,7 @@ It is no longer possible to manage game states between the two game boards witho
 It is not strictly necessary to reset the game moves after every move request. Reseting the game move after each move request allows us to see when we've sent a request to the other player, but after we have sent that request it is no longer possible to check the last move.
 
 4.
+It would be possible to search for the pressed button without looping through all of the buttons through the use of list manipulation. If all of the buttons were put in a list it would be possible to use indexOf() with the view and the list and then turing the output of that into rows and columns.
 
 Milestone 1
 
