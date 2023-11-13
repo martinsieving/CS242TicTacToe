@@ -104,21 +104,19 @@ public class SocketServer
      */
     public void startAcceptingRequest()
     {
-        try
+        while(true)
         {
-            Socket socketPlayer1 = serverSocket.accept();
-            logger.log(Level.INFO,"New Socket Client Connect with IP: " + socketPlayer1.getRemoteSocketAddress());
-            ServerHandler serverHandlerPlayer1 = new ServerHandler(socketPlayer1, "player1");
-            serverHandlerPlayer1.start();
-
-            Socket socketPlayer2 = serverSocket.accept();
-            logger.log(Level.INFO,"New Socket Client Connect with IP: " + socketPlayer2.getRemoteSocketAddress());
-            ServerHandler serverHandlerPlayer2 = new ServerHandler(socketPlayer2, "player2");
-            serverHandlerPlayer2.start();
-        }
-        catch(Exception e)
-        {
-            logger.log(Level.SEVERE, e.getMessage());
+            try
+            {
+                Socket socketPlayer = serverSocket.accept();
+                logger.log(Level.INFO,"New Socket Client Connect with IP: " + socketPlayer.getRemoteSocketAddress());
+                ServerHandler serverHandlerPlayer = new ServerHandler(socketPlayer);
+                serverHandlerPlayer.start();
+            }
+            catch(Exception e)
+            {
+                logger.log(Level.SEVERE, e.getMessage());
+            }
         }
     }
     

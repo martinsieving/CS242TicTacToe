@@ -7,6 +7,8 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
+
 import javax.sound.sampled.AudioFileFormat.Type;
 
 import com.google.gson.Gson;
@@ -30,7 +32,7 @@ public class ServerHandler extends Thread
 {
     private final Logger logger;
 
-    private static Event event = new Event(1, null, null, null, null, -1);
+    private int currentEventId;
     private final Socket socket;
     private String currentUsername;
     private final DataInputStream input;
@@ -42,11 +44,10 @@ public class ServerHandler extends Thread
      * @param socket sets the socket class variable
      * @param currentUsername sets the currentUsername class variable
      */
-    public ServerHandler(Socket socket, String currentUsername) throws IOException
+    public ServerHandler(Socket socket) throws IOException
     {
         logger = Logger.getLogger(SocketServer.class.getName());
         this.socket = socket;
-        this.currentUsername = currentUsername;
         this.input = new DataInputStream(socket.getInputStream());
         this.output = new DataOutputStream(socket.getOutputStream());
         this.gson = new GsonBuilder().serializeNulls().create();
@@ -148,20 +149,30 @@ public class ServerHandler extends Thread
      */
     private Response handleSendMove(int move)
     {
-        if(move < 0 || move > 8)
+        try
         {
-			return new Response(Response.ResponseStatus.FAILURE, "Invalid Move");
-		}
-		if(event.getTurn() == null || !event.getTurn().equals(currentUsername))
+            Event event = DatabaseHelper.getInstance().getEvent(currentEventId);
+            if(move < 0 || move > 8)
+            {
+			    return new Response(Response.ResponseStatus.FAILURE, "Invalid Move");
+		    }
+		    if(event.getTurn() == null || !event.getTurn().equals(currentUsername))
+            {
+			    event.setMove(move);
+			    event.setTurn(currentUsername);
+			    return new Response(Response.ResponseStatus.SUCCESS, "Move Added");
+		    }
+            else
+            {
+			    return new Response(Response.ResponseStatus.FAILURE, "Not your turn to move");
+		    }
+            DatabaseHelper.getInstance().updateEvent(event);
+        }
+        catch(SQLException e)
         {
-			event.setMove(move);
-			event.setTurn(currentUsername);
-			return new Response(Response.ResponseStatus.SUCCESS, "Move Added");
-		}
-        else
-        {
-			return new Response(Response.ResponseStatus.FAILURE, "Not your turn to move");
-		}
+            logger.log(Level.SEVERE, "No event with this Event Id exists");
+            return new Response(Response.ResponseStatus.FAILURE, "Game not found");
+        }
     }
 
     /**
@@ -171,19 +182,29 @@ public class ServerHandler extends Thread
      */
     private GamingResponse handleRequestMove()
     {
-        GamingResponse response = new GamingResponse();
-        response.setStatus(ResponseStatus.SUCCESS);
-        if(event.getMove() != -1 && !event.getTurn().equals(currentUsername))
+        try
         {
-            response.setMove(event.getMove());
-            event.setMove(-1);
-            event.setTurn(null);
+            Event event = DatabaseHelper.getInstance().getEvent(currentEventId);
+            GamingResponse response = new GamingResponse();
+            response.setStatus(ResponseStatus.SUCCESS);
+            if(event.getMove() != -1 && !event.getTurn().equals(currentUsername))
+            {
+                response.setMove(event.getMove());
+                event.setMove(-1);
+                event.setTurn(null);
+            }
+            else
+            {
+                response.setMove(-1);
+            }
+            DatabaseHelper.getInstance().updateEvent(event);
+            return response;
         }
-        else
+        catch(SQLException e)
         {
-            response.setMove(-1);
+            logger.log(Level.SEVERE, "No event with this Event Id exists");
+            return new GamingResponse(ResponseStatus.FAILURE, currentUsername, -1, true);
         }
-        return response;
     }
 
 }

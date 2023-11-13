@@ -75,13 +75,13 @@ public class UserTest
             everythingWorks = false;
         }
         
-        if(user1.getOnline() != onlineTest)
+        if(user1.isOnline() != onlineTest)
         {
             System.out.println("Problem with User class online");
             everythingWorks = false;
         }
 
-        if(user2.getOnline() != onlineTest)
+        if(user2.isOnline() != onlineTest)
         {
             System.out.println("Problem with User class online");
             everythingWorks = false;

@@ -106,7 +106,7 @@ public class User {
     /** 
      * @return online class variable, represented as a boolean.
      */
-    public boolean getOnline() {
+    public boolean isOnline() {
         return online;
     }
     

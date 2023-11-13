@@ -21,8 +21,8 @@ os.system('javac -d ' + dir + ' ../src/socket/Response.java ../src/socket/Reques
 
 # build server package
 print('generating server package')
-#os.system('javac -cp ' + dir + '/../build -d ' + dir + ' ../src/server/ServerHandler.java ../src/server/SocketServer.java')
-os.system('javac -cp .;' + dir + '/../lib/gson-2.10.1.jar -d ' + dir + ' ../src/server/ServerHandler.java ../src/server/SocketServer.java')
+
+os.system('javac -cp .;' + dir + '/../lib/gson-2.10.1.jar -d ' + dir + ' ../src/server/ServerHandler.java ../src/server/SocketServer.java ../src/server/DatabaseHelper.java')
 
 # build test package
 print('generating test package')
