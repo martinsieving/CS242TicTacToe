@@ -6,12 +6,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.net.*;
-import javax.net.ssl.*;
+import java.net.Socket;
 import javax.sound.sampled.AudioFileFormat.Type;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import model.Event;
 import socket.GamingResponse;
@@ -28,35 +28,28 @@ import socket.Response.ResponseStatus;
 
 public class ServerHandler extends Thread
 {
-    private static Logger logger = Logger.getLogger(SocketServer.class.getName());
+    private final Logger logger;
 
-    private static Event event;
-    private Socket socket;
+    private static Event event = new Event(1, null, null, null, null, -1);
+    private final Socket socket;
     private String currentUsername;
-    private DataInputStream input;
-    private DataOutputStream output;
-    private Gson gson;
+    private final DataInputStream input;
+    private final DataOutputStream output;
+    private final Gson gson;
 
     /**
      * Constructor
      * @param socket sets the socket class variable
      * @param currentUsername sets the currentUsername class variable
      */
-    public ServerHandler(Socket socket, String currentUsername)
+    public ServerHandler(Socket socket, String currentUsername) throws IOException
     {
+        logger = Logger.getLogger(SocketServer.class.getName());
         this.socket = socket;
         this.currentUsername = currentUsername;
-        try
-        {
-            this.input = new DataInputStream(socket.getInputStream());
-            this.output = new DataOutputStream(socket.getOutputStream());
-            this.gson = new GsonBuilder().serializeNulls().create();
-            event = new Event(0, null, null, null, null, -1);
-        }
-        catch(Exception e)
-        {
-            logger.log(Level.SEVERE, e.getMessage());
-        }
+        this.input = new DataInputStream(socket.getInputStream());
+        this.output = new DataOutputStream(socket.getOutputStream());
+        this.gson = new GsonBuilder().serializeNulls().create();
     }
 
     /**
@@ -73,19 +66,23 @@ public class ServerHandler extends Thread
                 Request request = gson.fromJson(requestMessage, Request.class);
 
                 Response response = handleRequest(request);
-                String responseMessage = gson.toJson(response, Response.class);
+                String responseMessage = gson.toJson(response);
                 logger.log(Level.INFO, "Sending response: " + responseMessage);
                 output.writeUTF(responseMessage);
                 output.flush();
             }
             catch(EOFException eofe)
             {
+                logger.log(Level.INFO, "Client Disconnected: " + currentUsername + " - " + socket.getRemoteSocketAddress());
                 break;
             }
             catch(IOException ioe)
             {
-                System.err.println("IOException occured");
-                break;
+                logger.log(Level.SEVERE, "Client Connection Failed");
+            }
+            catch(JsonSyntaxException e)
+            {
+                logger.log(Level.SEVERE, "Serialization Error");
             }
         }
         close();
@@ -135,13 +132,11 @@ public class ServerHandler extends Thread
         switch(request.getType())
         {
             case SEND_MOVE:
-                int move = gson.fromJson(request.getData(), int.class);
-                return handleSendMove(move);
+                return handleSendMove(gson.fromJson(request.getData(), Integer.class));
             case REQUEST_MOVE:
-                GamingResponse response = handleRequestMove();
-                return response;
+                return handleRequestMove();
             default:
-                return new Response(ResponseStatus.FAILURE, request.getData());
+                return new Response(ResponseStatus.FAILURE, "Invalid Requenst: " + request.getData());
         }
     }
 
@@ -153,15 +148,20 @@ public class ServerHandler extends Thread
      */
     private Response handleSendMove(int move)
     {
-        if(event.getTurn().equals(currentUsername))
+        if(move < 0 || move > 8)
         {
-            logger.log(Level.WARNING, "It is not " + currentUsername + "'s turn");
-            return new Response(ResponseStatus.FAILURE, "It is not " + currentUsername + "'s turn");
-        }
-        event.setMove(move);
-        event.setTurn(currentUsername);
-        logger.log(Level.INFO, currentUsername + " performed move " + Integer.toString(move));
-        return new Response(ResponseStatus.SUCCESS, "move: " + Integer.toString(move) + ", turn: ");
+			return new Response(Response.ResponseStatus.FAILURE, "Invalid Move");
+		}
+		if(event.getTurn() == null || !event.getTurn().equals(currentUsername))
+        {
+			event.setMove(move);
+			event.setTurn(currentUsername);
+			return new Response(Response.ResponseStatus.SUCCESS, "Move Added");
+		}
+        else
+        {
+			return new Response(Response.ResponseStatus.FAILURE, "Not your turn to move");
+		}
     }
 
     /**
@@ -171,14 +171,19 @@ public class ServerHandler extends Thread
      */
     private GamingResponse handleRequestMove()
     {
-        logger.log(Level.INFO, currentUsername + " is requesting a move");
-        int move = event.getMove();
-        event.setMove(-1);
-        if(move < 0 || move > 8)
+        GamingResponse response = new GamingResponse();
+        response.setStatus(ResponseStatus.SUCCESS);
+        if(event.getMove() != -1 && !event.getTurn().equals(currentUsername))
         {
-            move = -1;
+            response.setMove(event.getMove());
+            event.setMove(-1);
+            event.setTurn(null);
         }
-        return new GamingResponse(ResponseStatus.SUCCESS, currentUsername + " is requesting a move", move, true); 
+        else
+        {
+            response.setMove(-1);
+        }
+        return response;
     }
 
 }
