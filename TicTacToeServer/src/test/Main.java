@@ -46,6 +46,9 @@ public class Main {
             allSuccess = false;
         }
 
+        SocketClientHelper sch = new SocketClientHelper();
+        sch.pairingTest();
+
         if (allSuccess) {
             System.out.println("All success!!!");
         }
