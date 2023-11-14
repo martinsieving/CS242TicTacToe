@@ -50,14 +50,16 @@ public class SocketServer
     /**
      * Constructor that sets the PORT to a default value of 5000
      */
-    public SocketServer() throws Exception
+    public SocketServer()
     {
-        this(5000);
+        PORT = 5000;
+        logger = Logger.getLogger(SocketServer.class.getName());
     }
 
     /**
      * Constructor
      * @param PORT sets the PORT to the entered int value
+     * @throws Exception if PORT is less than 0
      */
     public SocketServer(int PORT) throws Exception
     {
@@ -100,7 +102,7 @@ public class SocketServer
     }
 
     /**
-     * setup the two client ServerHandler threads
+     * sets up client ServerHandler threads
      */
     public void startAcceptingRequest()
     {

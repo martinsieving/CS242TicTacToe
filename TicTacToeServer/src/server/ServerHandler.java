@@ -33,19 +33,45 @@ import socket.Response.ResponseStatus;
 
 public class ServerHandler extends Thread
 {
+    /**
+     * logs important information
+     */
     private final Logger logger;
 
+    /**
+     * stores eventId of event in DatabaseHelper when playing
+     */
     private int currentEventId;
+
+    /**
+     * stores the socket connection
+     */
     private final Socket socket;
+
+    /**
+     * Stores users username
+     */
     private String currentUsername;
+
+    /**
+     * input stream for socket connection
+     */
     private final DataInputStream input;
+
+    /**
+     * output stream for socket connection
+     */
     private final DataOutputStream output;
+
+    /**
+     * handles serialization for io
+     */
     private final Gson gson;
 
     /**
      * Constructor
      * @param socket sets the socket class variable
-     * @param currentUsername sets the currentUsername class variable
+     * @throws IOException when retreiving io streams from socket
      */
     public ServerHandler(Socket socket) throws IOException
     {
@@ -94,7 +120,7 @@ public class ServerHandler extends Thread
     }
 
     /**
-     * Closes io streams and the socket connection
+     * Closes io streams and the socket connection and sets the user to offline
      */
     public void close()
     {
@@ -143,9 +169,9 @@ public class ServerHandler extends Thread
     }
 
     /**
-     * Handles message requests
-     * @param request
-     * @return
+     * Handles message requests and returns the appropriate response
+     * @param request proper Request base on the given Request
+     * @return Response indicating the success of the action prompted by the submitted Request
      */
     public Response handleRequest(Request request)
     {
@@ -214,8 +240,7 @@ public class ServerHandler extends Thread
 
     /**
      * handles request of type REQUEST_MOVE
-     * @param request
-     * @return
+     * @return Response with status indicating the success of requesting a move
      */
     private GamingResponse handleRequestMove()
     {
@@ -257,9 +282,9 @@ public class ServerHandler extends Thread
     }
 
     /**
-     * 
-     * @param user
-     * @return
+     * handles requests of type REGISTER
+     * @param user the user to be registered
+     * @return Response with status indicating the success of registering the submitted user
      */
     private Response handleRegister(User user)
     {
@@ -280,9 +305,9 @@ public class ServerHandler extends Thread
     }
 
     /**
-     * 
-     * @param user
-     * @return
+     * handles requests of type LOGIN
+     * @param user the user information for login
+     * @return  Response with status indicating a successful login
      */
     private Response handleLogin(User user)
     {
@@ -309,6 +334,10 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type UPDATE_PAIRING
+     * @return Response with status indicating a successful pairing request
+     */
     private PairingResponse handleUpdatePairing()
     {
         if(currentUsername == null)
@@ -333,6 +362,11 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type SEND_INVITATION
+     * @param opponent username of the opponent to send an invitation to
+     * @return Response with status indicating if the invitation was successfully sent
+     */
     private Response handleSendInvitation(String opponent)
     {
         if(currentUsername == null)
@@ -360,6 +394,11 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type ACCEPT_INVITATION
+     * @param eventId eventId of the Event in the DatabaseHelper for the game being played
+     * @return Response with status indicating if the invitation was successfully accepted
+     */
     private Response handleAcceptInvitation(int eventId)
     {
         try
@@ -390,6 +429,11 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type DECLINE_INVITATION
+     * @param eventId eventId of the Event in the DatabaseHelper for the game being played
+     * @return Response with status indicating if the invitation was successfully declined
+     */
     private Response handleDeclineInvitation(int eventId)
     {
         try
@@ -418,6 +462,11 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type ACKNOWLEDGE_RESPONSE
+     * @param eventId eventId of the Event in the DatabaseHelper for the game being played
+     * @return Response with status indicating if a successful acknowledgement occured
+     */
     private Response handleAcknowledgeResponse(int eventId)
     {
         try
@@ -453,6 +502,10 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type COMPLETE_GAME
+     * @return Response with status indicating if the game was successfully completed
+     */
     private Response handleCompleteGame()
     {
         try
@@ -478,6 +531,10 @@ public class ServerHandler extends Thread
         }
     }
 
+    /**
+     * handles requests of type ABORT_GAME
+     * @return Response with status indicating if the game was successfully aborted
+     */
     private Response handleAbortGame()
     {
         try
