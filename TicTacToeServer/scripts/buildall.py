@@ -17,7 +17,7 @@ os.system('javac -d ' + dir + ' ../src/model/Event.java ../src/model/User.java')
 
 # build socket package
 print('generating socket package')
-os.system('javac -d ' + dir + ' ../src/socket/Response.java ../src/socket/Request.java ../src/socket/GamingResponse.java')
+os.system('javac -d ' + dir + ' ../src/socket/Response.java ../src/socket/Request.java ../src/socket/GamingResponse.java ../src/socket/PairingResponse.java')
 
 # build server package
 print('generating server package')

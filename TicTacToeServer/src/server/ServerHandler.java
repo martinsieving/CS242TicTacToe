@@ -16,7 +16,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import model.Event;
+import model.User;
+import model.Event.EventStatus;
 import socket.GamingResponse;
+import socket.PairingResponse;
 import socket.Request;
 import socket.Response;
 import socket.Response.ResponseStatus;
@@ -48,6 +51,7 @@ public class ServerHandler extends Thread
     {
         logger = Logger.getLogger(SocketServer.class.getName());
         this.socket = socket;
+        currentUsername = null;
         this.input = new DataInputStream(socket.getInputStream());
         this.output = new DataOutputStream(socket.getOutputStream());
         this.gson = new GsonBuilder().serializeNulls().create();
@@ -121,6 +125,21 @@ public class ServerHandler extends Thread
         {
             System.err.println("Problem encountered when closing socket");
         }
+        try
+        {
+            if(currentUsername != null)
+            {
+                User user = DatabaseHelper.getInstance().getUser(currentUsername);
+                user.setOnline(false);
+                DatabaseHelper.getInstance().updateUser(user);
+                DatabaseHelper.getInstance().abortAllUserEvents(currentUsername);
+            }
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "User does not exist");
+        }
+
     }
 
     /**
@@ -136,6 +155,24 @@ public class ServerHandler extends Thread
                 return handleSendMove(gson.fromJson(request.getData(), Integer.class));
             case REQUEST_MOVE:
                 return handleRequestMove();
+            case REGISTER:
+                return handleRegister(gson.fromJson(request.getData(), User.class));
+            case LOGIN:
+                return handleLogin(gson.fromJson(request.getData(), User.class));
+            case UPDATE_PAIRING:
+                return handleUpdatePairing();
+            case SEND_INVITATION:
+                return handleSendInvitation(gson.fromJson(request.getData(), String.class));
+            case ACCEPT_INVITATION:
+                return handleAcceptInvitation(gson.fromJson(request.getData(), Integer.class));
+            case DECLINE_INVITATION:
+                return handleAcceptInvitation(gson.fromJson(request.getData(), Integer.class));
+            case ACKNOWLEDGE_RESPONSE:
+                return handleAcknowledgeResponse(gson.fromJson(request.getData(), Integer.class));
+            case COMPLETE_GAME:
+                return handleCompleteGame();
+            case ABORT_GAME:
+                return handleAbortGame();
             default:
                 return new Response(ResponseStatus.FAILURE, "Invalid Requenst: " + request.getData());
         }
@@ -160,13 +197,13 @@ public class ServerHandler extends Thread
             {
 			    event.setMove(move);
 			    event.setTurn(currentUsername);
+                DatabaseHelper.getInstance().updateEvent(event);
 			    return new Response(Response.ResponseStatus.SUCCESS, "Move Added");
 		    }
             else
             {
 			    return new Response(Response.ResponseStatus.FAILURE, "Not your turn to move");
 		    }
-            DatabaseHelper.getInstance().updateEvent(event);
         }
         catch(SQLException e)
         {
@@ -186,9 +223,20 @@ public class ServerHandler extends Thread
         {
             Event event = DatabaseHelper.getInstance().getEvent(currentEventId);
             GamingResponse response = new GamingResponse();
-            response.setStatus(ResponseStatus.SUCCESS);
-            if(event.getMove() != -1 && !event.getTurn().equals(currentUsername))
+            if(event.getStatus() == EventStatus.ABORTED)
             {
+                response.setActive(false);
+                response.setMessage("Opponent Abort");
+
+            }
+            else if(event.getStatus() == EventStatus.COMPLETED)
+            {
+                response.setActive(false);
+                response.setMessage("Opponent Deny Play Again");
+            }
+            else if(event.getMove() != -1 && !event.getTurn().equals(currentUsername))
+            {
+                response.setActive(true);
                 response.setMove(event.getMove());
                 event.setMove(-1);
                 event.setTurn(null);
@@ -198,13 +246,260 @@ public class ServerHandler extends Thread
                 response.setMove(-1);
             }
             DatabaseHelper.getInstance().updateEvent(event);
+            response.setStatus(ResponseStatus.SUCCESS);
             return response;
         }
         catch(SQLException e)
         {
             logger.log(Level.SEVERE, "No event with this Event Id exists");
-            return new GamingResponse(ResponseStatus.FAILURE, currentUsername, -1, true);
+            return new GamingResponse(ResponseStatus.FAILURE, currentUsername, -1, false);
         }
     }
 
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    private Response handleRegister(User user)
+    {
+        try
+        {
+            if(DatabaseHelper.getInstance().isUsernameExists(user.getUsername()))
+            {
+                return new Response(ResponseStatus.FAILURE, "User already exists");
+            }
+            DatabaseHelper.getInstance().createUser(user);
+            return new Response(ResponseStatus.SUCCESS, "User has been added");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Problem occured when registering user");
+            return new Response(ResponseStatus.FAILURE, "Problem occured when registering user");
+        }
+    }
+
+    /**
+     * 
+     * @param user
+     * @return
+     */
+    private Response handleLogin(User user)
+    {
+        try
+        {
+            User validUser = DatabaseHelper.getInstance().getUser(user.getUsername());
+            if(validUser == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "User does not exist");
+            }
+            if(!validUser.getPassword().equals(user.getPassword()))
+            {
+                return new Response(ResponseStatus.FAILURE, "Incorrect password");
+            }
+            currentUsername = user.getUsername();
+            user.setOnline(true);
+            DatabaseHelper.getInstance().createUser(user);
+            return new Response(ResponseStatus.SUCCESS, "Successful login");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Problem occured during login");
+            return new Response(ResponseStatus.FAILURE, "Problem occured during login");
+        }
+    }
+
+    private PairingResponse handleUpdatePairing()
+    {
+        if(currentUsername == null)
+        {
+            return new PairingResponse(ResponseStatus.FAILURE, "User is not logged in", null, null, null);
+        }
+        try
+        {
+            User user = DatabaseHelper.getInstance().getUser(currentUsername);
+            PairingResponse response = new PairingResponse();
+            response.setAvailableUsers(DatabaseHelper.getInstance().getAvailableUsers(currentUsername));
+            response.setInvitation(DatabaseHelper.getInstance().getUserInvitation(currentUsername));
+            response.setInvitationResponse(DatabaseHelper.getInstance().getUserInvitationResponse(currentUsername));
+            response.setMessage("Successfully requested pairing update");
+            response.setStatus(ResponseStatus.SUCCESS);
+            return response;
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Current user does not exist");
+            return new PairingResponse(ResponseStatus.FAILURE, "User does not exist", null, null, null);
+        }
+    }
+
+    private Response handleSendInvitation(String opponent)
+    {
+        if(currentUsername == null)
+        {
+            return new PairingResponse(ResponseStatus.FAILURE, "User is not logged in", null, null, null);
+        }
+        try
+        {
+            if(!DatabaseHelper.getInstance().isUserAvailable(opponent))
+            {
+                return new Response(ResponseStatus.FAILURE, "User is not available");
+            }
+            Event event = new Event();
+            event.setSender(currentUsername);
+            event.setOpponent(opponent);
+            event.setStatus(EventStatus.PENDING);
+            event.setMove(-1);
+            DatabaseHelper.getInstance().createEvent(event);
+            return new Response(ResponseStatus.SUCCESS, "Created event");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "User does not exist");
+            return new Response(ResponseStatus.FAILURE, "User does not exist");
+        }
+    }
+
+    private Response handleAcceptInvitation(int eventId)
+    {
+        try
+        {
+            Event event = DatabaseHelper.getInstance().getEvent(eventId);
+            if(event == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "Request does not exist");
+            }
+            if(event.getStatus() != EventStatus.PENDING)
+            {
+                return new Response(ResponseStatus.FAILURE, "Request is not PENDING");
+            }
+            if(!event.getOpponent().equals(currentUsername))
+            {
+                return new Response(ResponseStatus.FAILURE, "Request is not for this user");
+            }
+            event.setStatus(EventStatus.ACCEPTED);
+            DatabaseHelper.getInstance().abortAllUserEvents(currentUsername);
+            DatabaseHelper.getInstance().updateEvent(event);
+            currentEventId = eventId;
+            return new Response(ResponseStatus.SUCCESS, "Accepted request");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Event does not exist");
+            return new Response(ResponseStatus.FAILURE, "Event does not exist");
+        }
+    }
+
+    private Response handleDeclineInvitation(int eventId)
+    {
+        try
+        {
+            Event event = DatabaseHelper.getInstance().getEvent(eventId);
+            if(event == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "Request does not exist");
+            }
+            if(event.getStatus() != EventStatus.PENDING)
+            {
+                return new Response(ResponseStatus.FAILURE, "Request is not PENDING");
+            }
+            if(!event.getOpponent().equals(currentUsername))
+            {
+                return new Response(ResponseStatus.FAILURE, "Request is not for this user");
+            }
+            event.setStatus(EventStatus.DECLINED);
+            DatabaseHelper.getInstance().updateEvent(event);
+            return new Response(ResponseStatus.SUCCESS, "Declined request");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Event does not exist");
+            return new Response(ResponseStatus.FAILURE, "Event does not exist");
+        }
+    }
+
+    private Response handleAcknowledgeResponse(int eventId)
+    {
+        try
+        {
+            Event event = DatabaseHelper.getInstance().getEvent(eventId);
+            if(event == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "Event does not exist");
+            }
+            if(!event.getSender().equals(currentUsername))
+            {
+                return new Response(ResponseStatus.FAILURE, "Not this users message");
+            }
+            switch(event.getStatus())
+            {
+                case DECLINED:
+                    event.setStatus(EventStatus.ABORTED);
+                    DatabaseHelper.getInstance().updateEvent(event);
+                    return new Response(ResponseStatus.SUCCESS, "Acknowledged response");
+                case ACCEPTED:
+                    currentEventId = event.getEventId();
+                    DatabaseHelper.getInstance().abortAllUserEvents(currentUsername);
+                    DatabaseHelper.getInstance().updateEvent(event);
+                    return new Response(ResponseStatus.SUCCESS, "Acknowledged response");
+                default:
+                    return new Response(ResponseStatus.FAILURE, "Do not need to acknowledge");
+            }
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Event does not exist");
+            return new Response(ResponseStatus.FAILURE, "Event does not exist");
+        }
+    }
+
+    private Response handleCompleteGame()
+    {
+        try
+        {
+            Event event = DatabaseHelper.getInstance().getEvent(currentEventId);
+            if(event == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "Event does not exist");
+            }
+            if(event.getStatus() != EventStatus.PLAYING)
+            {
+                return new Response(ResponseStatus.FAILURE, "Game is not being played");
+            }
+            event.setStatus(EventStatus.COMPLETED);
+            currentEventId = -1;
+            DatabaseHelper.getInstance().updateEvent(event);
+            return new Response(ResponseStatus.SUCCESS, "Completed game");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Event does not exist");
+            return new Response(ResponseStatus.FAILURE, "Event does not exist");
+        }
+    }
+
+    private Response handleAbortGame()
+    {
+        try
+        {
+            Event event = DatabaseHelper.getInstance().getEvent(currentEventId);
+            if(event == null)
+            {
+                return new Response(ResponseStatus.FAILURE, "Event does not exist");
+            }
+            if(event.getStatus() != EventStatus.PLAYING)
+            {
+                return new Response(ResponseStatus.FAILURE, "Game is not being played");
+            }
+            event.setStatus(EventStatus.ABORTED);
+            currentEventId = -1;
+            DatabaseHelper.getInstance().updateEvent(event);
+            return new Response(ResponseStatus.SUCCESS, "Aborted game");
+        }
+        catch(SQLException e)
+        {
+            logger.log(Level.SEVERE, "Event does not exist");
+            return new Response(ResponseStatus.FAILURE, "Event does not exist");
+        }
+    }
 }
