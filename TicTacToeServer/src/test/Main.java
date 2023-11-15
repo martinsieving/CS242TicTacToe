@@ -47,10 +47,14 @@ public class Main {
         }
 
         PairingTest pairingTest = new PairingTest();
-        pairingTest.test();
+        if(!pairingTest.test())
+        {
+            System.out.println("PairingTest failed");
+            allSuccess = false;
+        }
 
         if (allSuccess) {
-            System.out.println("All success!!!");
+            System.out.println("all tests passed");
         }
     }
 }

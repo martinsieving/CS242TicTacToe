@@ -324,7 +324,7 @@ public class ServerHandler extends Thread
             }
             currentUsername = user.getUsername();
             user.setOnline(true);
-            DatabaseHelper.getInstance().createUser(user);
+            DatabaseHelper.getInstance().updateUser(user);
             return new Response(ResponseStatus.SUCCESS, "Successful login");
         }
         catch(SQLException e)
