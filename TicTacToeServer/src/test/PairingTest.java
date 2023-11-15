@@ -15,12 +15,25 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
+/**
+ * PairingTest class
+ * tests functions of the ServerHandler class's pairing cabalities
+ * @author Alexander Odom
+ * Clarkson University CS 242, November 2023
+ */
 public class PairingTest {
+    /**
+     * Default constructor
+     */
     public PairingTest()
     {
         
     }
 
+    /**
+     * Tests all message requests for the ServerHandler class
+     * @return true if all tests pass, false otherwise
+     */
     public boolean test()
     {
         Thread mainThread = new Thread(() ->
@@ -50,23 +63,6 @@ public class PairingTest {
             SocketClientHelper sch2 = new SocketClientHelper();
             SocketClientHelper sch3 = new SocketClientHelper();
             SocketClientHelper sch4 = new SocketClientHelper();
-
-            /*
-            Request request1 = new Request(RequestType.LOGIN, gson.toJson(user1));
-            Request request2 = new Request(RequestType.LOGIN, gson.toJson(user2));
-            Request request3 = new Request(RequestType.LOGIN, gson.toJson(user3));
-            Request request4 = new Request(RequestType.LOGIN, gson.toJson(user4));
-
-            Response response1 = sch1.sendRequest(request1, Response.class);
-            Response response2 = sch2.sendRequest(request2, Response.class);
-            Response response3 = sch3.sendRequest(request3, Response.class);
-            Response response4 = sch4.sendRequest(request4, Response.class);
-
-            System.out.println(gson.toJson(response1));
-            System.out.println(gson.toJson(response2));
-            System.out.println(gson.toJson(response3));
-            System.out.println(gson.toJson(response4));
-            */
 
             if(sch1.sendRequest(new Request(RequestType.LOGIN, gson.toJson(user1)), Response.class).getStatus() != ResponseStatus.FAILURE)
             {
@@ -172,6 +168,48 @@ public class PairingTest {
             if(sch1.sendRequest(new Request(RequestType.ACKNOWLEDGE_RESPONSE, gson.toJson(sch1.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user1)), PairingResponse.class).getInvitationResponse().getEventId())), Response.class).getStatus() != ResponseStatus.SUCCESS)
             {
                 System.out.println("Problem acknowledging rejected invitation");
+                return false;
+            }
+
+            if(sch1.sendRequest(new Request(RequestType.SEND_INVITATION, gson.toJson(user3.getUsername())), Response.class).getStatus() != ResponseStatus.SUCCESS)
+            {
+                System.out.println("Problem sending invitation");
+                return false;
+            }
+
+            if(sch3.sendRequest(new Request(RequestType.ACCEPT_INVITATION, gson.toJson(sch3.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user3)), PairingResponse.class).getInvitation().getEventId())), Response.class).getStatus() != ResponseStatus.SUCCESS)
+            {
+                System.out.println("Problem accepting invitation");
+                return false;
+            }
+
+            if(sch1.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user1)), PairingResponse.class).getInvitationResponse() == null)
+            {
+                System.out.println("Problem recieving accepted invitation");
+                return false;
+            }
+
+            if(sch1.sendRequest(new Request(RequestType.ACKNOWLEDGE_RESPONSE, gson.toJson(sch1.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user1)), PairingResponse.class).getInvitationResponse().getEventId())), Response.class).getStatus() != ResponseStatus.SUCCESS)
+            {
+                System.out.println("Problem acknowledging accepted invitation");
+                return false;
+            }
+
+            if(sch2.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user2)), PairingResponse.class).getAvailableUsers().size() != 1)
+            {
+                System.out.println("Problem when requesting update pairing while 2 users are in a game");
+                return false;
+            }
+
+            if(sch1.sendRequest(new Request(RequestType.ABORT_GAME, null), Response.class).getStatus() != ResponseStatus.SUCCESS)
+            {
+                System.out.println("Problem aborting game");
+                return false;
+            }
+
+            if(sch2.sendRequest(new Request(RequestType.UPDATE_PAIRING, gson.toJson(user2)), PairingResponse.class).getAvailableUsers().size() != 3)
+            {
+                System.out.println("Problem when requesting update pairing after 2 users ended a game");
                 return false;
             }
 

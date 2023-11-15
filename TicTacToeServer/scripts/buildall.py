@@ -32,3 +32,5 @@ print('build complete')
 
 # to run use 
 # java -cp ".;<path to gson>" <path to executable>
+# ex. (run test.Main from build directory)
+# java -cp ".;../lib/gson-2.10.1.jar;../lib/sqlite-jdbc-3.43.0.0.jar" test/Main

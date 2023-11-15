@@ -487,6 +487,7 @@ public class ServerHandler extends Thread
                     DatabaseHelper.getInstance().updateEvent(event);
                     return new Response(ResponseStatus.SUCCESS, "Acknowledged response");
                 case ACCEPTED:
+                    event.setStatus(EventStatus.PLAYING);
                     currentEventId = event.getEventId();
                     DatabaseHelper.getInstance().abortAllUserEvents(currentUsername);
                     DatabaseHelper.getInstance().updateEvent(event);
