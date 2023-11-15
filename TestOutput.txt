@@ -1,0 +1,145 @@
+Nov 15, 2023 2:53:36 PM server.DatabaseHelper <init>
+INFO: Database Has Been Created
+Nov 15, 2023 2:53:36 PM server.SocketServer setup
+INFO: Server Initialization Succeeded
+Server Host Name: *******
+Server IP: **************
+Server Port Number: 5000
+Nov 15, 2023 2:53:37 PM server.SocketServer startAcceptingRequest
+INFO: New Socket Client Connect with IP: /127.0.0.1:64141
+Nov 15, 2023 2:53:37 PM server.SocketServer startAcceptingRequest
+INFO: New Socket Client Connect with IP: /127.0.0.1:64142
+Nov 15, 2023 2:53:37 PM server.SocketServer startAcceptingRequest
+INFO: New Socket Client Connect with IP: /127.0.0.1:64143
+Nov 15, 2023 2:53:37 PM server.SocketServer startAcceptingRequest
+INFO: New Socket Client Connect with IP: /127.0.0.1:64144
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}    
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"FAILURE","message":"User does not exist"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"REGISTER","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"} 
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"User has been added"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player1\",\n  \"password\": \"not admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"FAILURE","message":"Incorrect password"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}    
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Successful login"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"REGISTER","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"} 
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"User has been added"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"REGISTER","data":"{\n  \"username\": \"player3\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 3\",\n  \"online\": false\n}"} 
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"User has been added"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"REGISTER","data":"{\n  \"username\": \"player4\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 4\",\n  \"online\": false\n}"} 
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"User has been added"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":null,"invitation":null,"invitationResponse":null,"status":"FAILURE","message":"User is not logged in"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}    
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Successful login"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true}],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player3\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 3\",\n  \"online\": false\n}"}    
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Successful login"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player4\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 4\",\n  \"online\": false\n}"}    
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Successful login"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true},{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Client Disconnected: player4 - /127.0.0.1:64144
+Nov 15, 2023 2:53:37 PM server.ServerHandler close
+INFO: ServerHandler input stream closed
+Nov 15, 2023 2:53:37 PM server.ServerHandler close
+INFO: ServerHandler output stream closed
+Nov 15, 2023 2:53:37 PM server.ServerHandler close
+INFO: ServerHandler socket closed
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true},{"username":"player3","password":"","displayName":"Player 3","online":true}],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.SocketServer startAcceptingRequest
+INFO: New Socket Client Connect with IP: /127.0.0.1:64145
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"LOGIN","data":"{\n  \"username\": \"player4\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 4\",\n  \"online\": false\n}"}    
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true},{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":{"eventId":5,"sender":"player1","opponent":"player2","status":"PENDING","turn":null,"move":-1},"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true},{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":{"eventId":5,"sender":"player1","opponent":"player2","status":"PENDING","turn":null,"move":-1},"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"DECLINE_INVITATION","data":"5"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Accepted request"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":{"eventId":5,"sender":"player1","opponent":"player2","status":"ACCEPTED","turn":null,"move":-1},"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":{"eventId":5,"sender":"player1","opponent":"player2","status":"ACCEPTED","turn":null,"move":-1},"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"ACKNOWLEDGE_RESPONSE","data":"5"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Acknowledged response"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"SEND_INVITATION","data":"\"player3\""}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Created event"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player3\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 3\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":{"eventId":6,"sender":"player1","opponent":"player3","status":"PENDING","turn":null,"move":-1},"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"ACCEPT_INVITATION","data":"6"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Accepted request"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":{"eventId":6,"sender":"player1","opponent":"player3","status":"ACCEPTED","turn":null,"move":-1},"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player1\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 1\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":{"eventId":6,"sender":"player1","opponent":"player3","status":"ACCEPTED","turn":null,"move":-1},"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"ACKNOWLEDGE_RESPONSE","data":"6"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Acknowledged response"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"ABORT_GAME","data":null}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"status":"SUCCESS","message":"Aborted game"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Request recieved: {"type":"UPDATE_PAIRING","data":"{\n  \"username\": \"player2\",\n  \"password\": \"admin\",\n  \"displayName\": \"Player 2\",\n  \"online\": false\n}"}
+Nov 15, 2023 2:53:37 PM server.ServerHandler run
+INFO: Sending response: {"availableUsers":[{"username":"player1","password":"","displayName":"Player 1","online":true},{"username":"player3","password":"","displayName":"Player 3","online":true},{"username":"player4","password":"","displayName":"Player 4","online":true}],"invitation":null,"invitationResponse":null,"status":"SUCCESS","message":"Successfully requested pairing update"}
+all tests passed

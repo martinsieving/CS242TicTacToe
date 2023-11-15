@@ -1,6 +1,31 @@
 Alexander Odom
 Martin Sieving
 
+Milestone 3
+
+1.
+all tests passed. Full output in TestOutput.txt
+
+2.
+The COMPLETE_GAME and ABORT_GAME requests are almost identical except for the status that the event is set to. The COMPLETE_GAME request sets the users event to COMPLETED. The ABORT_GAME request sets the users event to ABORTED.
+
+3.
+With the current implementation it is possible for two users to login to the system using the same account credentials. The handleLogin() function does not check if the user that is logging in is already logged in.
+
+4.
+The stages of class Event during a game process are as follows:
+    1. Event object is created with a status of PENDING when an invitation is sent to another player
+    2. If the opponent accepts the invitation the status changes to ACCEPTED
+        a. Once the user that sent the invitation acknowledges this response the event's status is set to PLAYING
+        b. The event keeps its PLAYING status until one of the users sends an ABORT_GAME or COMPLETE_GAME request
+        c. If an ABORT_GAME request is sent the status is set to ABORTED
+        d. If a COMPLETE_GAME request is sent the status is set to COMPLETED
+    3. If the opponent declines the invitation the status changes to DECLINED
+        a. Once the user that sent the invitation acknowledges this response the event's status is set to ABORTED
+
+5.
+Clearing the database before starting the server is necessary. If you do not clear the database before each test run, the database will store users between sessions. This will cause the registration and login tests to fail.
+
 Milestone 2
 
 1.

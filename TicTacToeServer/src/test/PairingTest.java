@@ -58,7 +58,7 @@ public class PairingTest {
             User user2 = new User("player2", "admin", "Player 2", false);
             User user3 = new User("player3", "admin", "Player 3", false);
             User user4 = new User("player4", "admin", "Player 4", false);
-            
+
             SocketClientHelper sch1 = new SocketClientHelper();
             SocketClientHelper sch2 = new SocketClientHelper();
             SocketClientHelper sch3 = new SocketClientHelper();
