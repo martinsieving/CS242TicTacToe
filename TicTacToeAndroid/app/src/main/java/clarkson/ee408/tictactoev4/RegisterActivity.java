@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import clarkson.ee408.tictactoev4.client.AppExecutors;
 import clarkson.ee408.tictactoev4.client.SocketClient;
@@ -36,8 +37,8 @@ public class RegisterActivity extends AppCompatActivity {
         confirmPasswordField = findViewById(R.id.editTextConfirmPassword);
         displayNameField = findViewById(R.id.editTextDisplayName);
 
-        // TODO: Initialize Gson with null serialization option
-
+        // Initialize Gson with null serialization option
+        gson = new GsonBuilder().serializeNulls().create();
         //Adding Handlers
         //TODO: set an onclick listener to registerButton to call handleRegister()
 

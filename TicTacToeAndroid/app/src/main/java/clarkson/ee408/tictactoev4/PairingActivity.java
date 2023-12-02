@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -39,11 +40,13 @@ public class PairingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pairing);
 
         Log.e(TAG, "App is now created");
-        // TODO: setup Gson with null serialization option
+        // setup Gson with null serialization option
+        gson = new GsonBuilder().serializeNulls().create();
 
         //Setting the username text
         TextView usernameText = findViewById(R.id.text_username);
-        // TODO: set the usernameText to the username passed from LoginActivity (i.e from Intent)
+        // set the usernameText to the username passed from LoginActivity (i.e from Intent)
+        usernameText.setText(getIntent().getExtras().getString("username"));
 
         //Getting UI Elements
         noAvailableUsersText = findViewById(R.id.text_no_available_users);
