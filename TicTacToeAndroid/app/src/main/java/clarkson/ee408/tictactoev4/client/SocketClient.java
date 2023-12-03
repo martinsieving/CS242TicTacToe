@@ -63,7 +63,7 @@ public class SocketClient {
      * Can be accessed only the within the class (for singleton design pattern)
      */
     private SocketClient() {
-        String HOSTNAME = "128.153.170.137";
+        String HOSTNAME = "localhost";
         int PORT = 5000;
 
         gson = new GsonBuilder().serializeNulls().create();

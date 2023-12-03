@@ -93,6 +93,11 @@ public class RegisterActivity extends AppCompatActivity {
     void submitRegistration(User user) {
         // Send a REGISTER request to the server, if SUCCESS reponse, call goBackLogin(). Else, Toast the error message
         Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.REGISTER, gson.toJson(user)), Response.class);
+        if(response == null)
+        {
+            Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(response.getStatus() != Response.ResponseStatus.SUCCESS)
         {
             Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();

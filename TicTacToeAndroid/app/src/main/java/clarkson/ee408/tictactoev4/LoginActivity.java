@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         // Create User object with username and password and call submitLogin()
-        submitLogin(new User(username, password, "", false));
+        submitLogin(new User(username, password, null, false));
     }
 
     /**
@@ -69,6 +69,12 @@ public class LoginActivity extends AppCompatActivity {
     public void submitLogin(User user) {
         // Send a LOGIN request, If SUCCESS response, call gotoPairing(), else, Toast the error message from sever
         Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.LOGIN, gson.toJson(user)), Response.class);
+
+        if(response == null)
+        {
+            Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if(response.getStatus() != Response.ResponseStatus.SUCCESS) {
             Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
             return;

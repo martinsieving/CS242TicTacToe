@@ -13,20 +13,20 @@ dir = os.getcwd()
 
 # build model package
 print('generating model package...')
-os.system('javac -d ' + dir + ' ../src/model/Event.java ../src/model/User.java')
+os.system('javac -d "' + dir + '" ../src/model/Event.java ../src/model/User.java')
 
 # build socket package
 print('generating socket package')
-os.system('javac -d ' + dir + ' ../src/socket/Response.java ../src/socket/Request.java ../src/socket/GamingResponse.java ../src/socket/PairingResponse.java')
+os.system('javac -d "' + dir + '" ../src/socket/Response.java ../src/socket/Request.java ../src/socket/GamingResponse.java ../src/socket/PairingResponse.java')
 
 # build server package
 print('generating server package')
 
-os.system('javac -cp .;' + dir + '/../lib/gson-2.10.1.jar -d ' + dir + ' ../src/server/ServerHandler.java ../src/server/SocketServer.java ../src/server/DatabaseHelper.java')
+os.system('javac -cp ".;' + dir + '/../lib/gson-2.10.1.jar" -d "' + dir + '" ../src/server/ServerHandler.java ../src/server/SocketServer.java ../src/server/DatabaseHelper.java')
 
 # build test package
 print('generating test package')
-os.system('javac -cp .;' + dir + '/../lib/gson-2.10.1.jar -d ' + dir + ' ../src/test/PairingTest.java ../src/test/SocketClientHelper.java ../src/test/EventTest.java ../src/test/RequestTest.java ../src/test/ResponseTest.java ../src/test/SocketServerTest.java ../src/test/UserTest.java ../src/test/Main.java')
+os.system('javac -cp ".;' + dir + '/../lib/gson-2.10.1.jar" -d "' + dir + '" ../src/test/PairingTest.java ../src/test/SocketClientHelper.java ../src/test/EventTest.java ../src/test/RequestTest.java ../src/test/ResponseTest.java ../src/test/SocketServerTest.java ../src/test/UserTest.java ../src/test/Main.java')
 
 print('build complete')
 
