@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        tttGame = new TicTacToe(1);
+        tttGame = new TicTacToe(getIntent().getIntExtra("player", 0));
         buildGuiByCode( );
 
         gson = new GsonBuilder().serializeNulls().create();
         updateTurnStatus();
+        shouldRequestMove = true;
         // Background Timer
         handler = new Handler();
         refresh = () -> {
@@ -209,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
                 status.setText( tttGame.result( ) );
                 tttGame.setPlayer(tttGame.getPlayer() == 1 ? 2:1);
                 updateTurnStatus();
+                shouldRequestMove = true;
             }
             else if( id == -2 ) // NO button
                 MainActivity.this.finish( );
@@ -222,11 +224,9 @@ public class MainActivity extends AppCompatActivity {
         if(tttGame.getPlayer() == tttGame.getTurn()) {
             status.setText("Your Turn");
             enableButtons(true);
-            shouldRequestMove = false;
         } else{
             status.setText("Waiting for Opponent");
             enableButtons(false);
-            shouldRequestMove = true;
         }
     }
 
@@ -246,6 +246,13 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Network Error", Toast.LENGTH_LONG).show();
                 } else if (response.getStatus() == Response.ResponseStatus.FAILURE) {
                     Toast.makeText(getApplicationContext(), response.getMessage(), Toast.LENGTH_LONG).show();
+                } else if (!response.isActive()){
+                    status.setText(response.getMessage());
+                    // TODO change status background color
+                    enableButtons(false);
+                    shouldRequestMove = false;
+                    tttGame = null;
+
                 } else if(response.getMove() != -1){
                     // Convert cell id to row and columns
                     int row = response.getMove() / 3;
@@ -282,11 +289,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Sends an ABORT_GAME request to server
+     */
+    private void abortGame()
+    {
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ABORT_GAME, null), Response.class);
+        Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Sends a COMPLETE_GAME request to server
+     */
+    private void completeGame()
+    {
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.COMPLETE_GAME, null), Response.class);
+        Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
+    /**
      * Will be automatically called by Android when this page closes
      */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         handler.removeCallbacks(refresh);
+        if(tttGame.isGameOver())
+        {
+            completeGame();
+            return;
+        }
+        abortGame();
     }
 }

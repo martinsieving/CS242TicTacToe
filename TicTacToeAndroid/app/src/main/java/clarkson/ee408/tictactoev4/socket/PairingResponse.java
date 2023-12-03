@@ -15,7 +15,7 @@ import clarkson.ee408.tictactoev4.model.User;
 public class PairingResponse extends Response
 {
     /**
-     * List of all users availabe for pairing
+     * List of all users available for pairing
      */
     private List<User> availableUsers;
 

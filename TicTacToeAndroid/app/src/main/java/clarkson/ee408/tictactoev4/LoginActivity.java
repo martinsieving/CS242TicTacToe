@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,12 +50,12 @@ public class LoginActivity extends AppCompatActivity {
         // verify that all fields are not empty before proceeding. Toast with the error message
         if(username.isEmpty())
         {
-            System.out.println("No username was provided");
+            Toast.makeText(this, "No username was provided", Toast.LENGTH_SHORT).show();
             return;
         }
         if(password.isEmpty())
         {
-            System.out.println("No password was provided");
+            Toast.makeText(this, "No password was provided", Toast.LENGTH_SHORT).show();
             return;
         }
         // Create User object with username and password and call submitLogin()
@@ -67,13 +68,12 @@ public class LoginActivity extends AppCompatActivity {
      */
     public void submitLogin(User user) {
         // Send a LOGIN request, If SUCCESS response, call gotoPairing(), else, Toast the error message from sever
-        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.LOGIN, user.getUsername()), Response.class);
-        if(response.getStatus() == Response.ResponseStatus.SUCCESS) {
-            gotoPairing(user.getUsername());
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.LOGIN, gson.toJson(user)), Response.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS) {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
         }
-        else {
-            System.out.println(response.getMessage());
-        }
+        gotoPairing(user.getUsername());
     }
 
     /**
@@ -83,9 +83,7 @@ public class LoginActivity extends AppCompatActivity {
     public void gotoPairing(String username) {
         // start PairingActivity and pass the username
         Intent intent = new Intent(this, PairingActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("username", username);
-        intent.putExtras(bundle);
+        intent.putExtra("username", username);
         startActivity(intent);
     }
 

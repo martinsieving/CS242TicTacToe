@@ -1,9 +1,12 @@
 package clarkson.ee408.tictactoev4;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,9 +18,12 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import clarkson.ee408.tictactoev4.client.SocketClient;
 import clarkson.ee408.tictactoev4.model.Event;
 import clarkson.ee408.tictactoev4.model.User;
 import clarkson.ee408.tictactoev4.socket.PairingResponse;
+import clarkson.ee408.tictactoev4.socket.Request;
+import clarkson.ee408.tictactoev4.socket.Response;
 
 public class PairingActivity extends AppCompatActivity {
 
@@ -46,7 +52,7 @@ public class PairingActivity extends AppCompatActivity {
         //Setting the username text
         TextView usernameText = findViewById(R.id.text_username);
         // set the usernameText to the username passed from LoginActivity (i.e from Intent)
-        usernameText.setText(getIntent().getExtras().getString("username"));
+        usernameText.setText(getIntent().getStringExtra("username"));
 
         //Getting UI Elements
         noAvailableUsersText = findViewById(R.id.text_no_available_users);
@@ -61,7 +67,11 @@ public class PairingActivity extends AppCompatActivity {
 
         handler = new Handler();
         refresh = () -> {
-            // TODO: call getPairingUpdate if shouldUpdatePairing is true
+            // call getPairingUpdate if shouldUpdatePairing is true
+            if(shouldUpdatePairing)
+            {
+                getPairingUpdate();
+            }
             handler.postDelayed(refresh, 1000);
         };
         handler.post(refresh);
@@ -71,7 +81,15 @@ public class PairingActivity extends AppCompatActivity {
      * Send UPDATE_PAIRING request to the server
      */
     private void getPairingUpdate() {
-        // TODO:  Send an UPDATE_PAIRING request to the server. If SUCCESS call handlePairingUpdate(). Else, Toast the error
+        // Send an UPDATE_PAIRING request to the server. If SUCCESS call handlePairingUpdate(). Else, Toast the error
+        PairingResponse response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.UPDATE_PAIRING, ""), PairingResponse.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+        {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        handlePairingUpdate(response);
+
     }
 
     /**
@@ -79,13 +97,26 @@ public class PairingActivity extends AppCompatActivity {
      * @param response PairingResponse from the server
      */
     private void handlePairingUpdate(PairingResponse response) {
-        // TODO: handle availableUsers by calling updateAvailableUsers()
+        // handle availableUsers by calling updateAvailableUsers()
+        updateAvailableUsers(response.getAvailableUsers());
+        // handle invitationResponse. First by sending acknowledgement calling sendAcknowledgement()
+        sendAcknowledgement(response.getInvitationResponse());
+        // If the invitationResponse is ACCEPTED, Toast an accept message and call beginGame
+        if(response.getInvitationResponse().getStatus() == Event.EventStatus.ACCEPTED)
+        {
+            Toast.makeText(this, "Game has been accepted", Toast.LENGTH_SHORT).show();
+            beginGame(response.getInvitationResponse(), 1);
+            return;
+        }
+        // If the invitationResponse is DECLINED, Toast a decline message
+        else if(response.getInvitationResponse().getStatus() == Event.EventStatus.DECLINED)
+        {
+            Toast.makeText(this, "Game has been declined", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // TODO: handle invitationResponse. First by sending acknowledgement calling sendAcknowledgement()
-        // --TODO: If the invitationResponse is ACCEPTED, Toast an accept message and call beginGame
-        // --TODO: If the invitationResponse is DECLINED, Toast a decline message
-
-        // TODO: handle invitation by calling createRespondAlertDialog()
+        // handle invitation by calling createRespondAlertDialog()
+        createRespondAlertDialog(response.getInvitation());
     }
 
     /**
@@ -95,9 +126,13 @@ public class PairingActivity extends AppCompatActivity {
     public void updateAvailableUsers(List<User> availableUsers) {
         adapter.setUsers(availableUsers);
         if (adapter.getItemCount() <= 0) {
-            // TODO show noAvailableUsersText and hide recyclerView
+            // show noAvailableUsersText and hide recyclerView
+            recyclerView.setVisibility(View.GONE);
+            noAvailableUsersText.setVisibility(View.VISIBLE);
         } else {
-            // TODO hide noAvailableUsersText and show recyclerView
+            // hide noAvailableUsersText and show recyclerView
+            noAvailableUsersText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -106,7 +141,14 @@ public class PairingActivity extends AppCompatActivity {
      * @param userOpponent the User to send invitation to
      */
     private void sendGameInvitation(User userOpponent) {
-        // TODO:  Send an SEND_INVITATION request to the server. If SUCCESS Toast a success message. Else, Toast the error
+        // Send an SEND_INVITATION request to the server. If SUCCESS Toast a success message. Else, Toast the error
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.SEND_INVITATION, userOpponent.getUsername()), Response.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+        {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(this, "Sent Game Invitation", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -114,7 +156,8 @@ public class PairingActivity extends AppCompatActivity {
      * Tell server i have received accept or declined response from my opponent
       */
     private void sendAcknowledgement(Event invitationResponse) {
-        // TODO:  Send an ACKNOWLEDGE_RESPONSE request to the server.
+        // Send an ACKNOWLEDGE_RESPONSE request to the server.
+        SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACKNOWLEDGE_RESPONSE, gson.toJson(invitationResponse.getEventId())), Response.class);
     }
 
     /**
@@ -122,7 +165,8 @@ public class PairingActivity extends AppCompatActivity {
      * @param invitation the Event of an invitation
      */
     private void createRespondAlertDialog(Event invitation) {
-        // TODO: set shouldUpdatePairing to false
+        // set shouldUpdatePairing to false
+        shouldUpdatePairing = false;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setCancelable(false);
         builder.setTitle("Game Invitation");
@@ -137,7 +181,14 @@ public class PairingActivity extends AppCompatActivity {
      * @param invitation the Event invitation to accept
      */
     private void acceptInvitation(Event invitation) {
-        // TODO:  Send an ACCEPT_INVITATION request to the server. If SUCCESS beginGame() as player 2. Else, Toast the error
+        // Send an ACCEPT_INVITATION request to the server. If SUCCESS beginGame() as player 2. Else, Toast the error
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACCEPT_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+        {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        beginGame(invitation, 2);
     }
 
     /**
@@ -145,9 +196,18 @@ public class PairingActivity extends AppCompatActivity {
      * @param invitation the Event invitation to decline
      */
     private void declineInvitation(Event invitation) {
-        // TODO:  Send a DECLINE_INVITATION request to the server. If SUCCESS response, Toast a message, else, Toast the error
-
-        // TODO: set shouldUpdatePairing to true after DECLINE_INVITATION is sent.
+        // Send a DECLINE_INVITATION request to the server. If SUCCESS response, Toast a message, else, Toast the error
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.DECLINE_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+        {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Declined Invitation", Toast.LENGTH_SHORT).show();
+        }
+        // set shouldUpdatePairing to true after DECLINE_INVITATION is sent.
+        shouldUpdatePairing = true;
     }
 
     /**
@@ -156,15 +216,19 @@ public class PairingActivity extends AppCompatActivity {
      * @param player either 1 or 2
      */
     private void beginGame(Event pairing, int player) {
-        // TODO: set shouldUpdatePairing to false
-
-        // TODO: start MainActivity and pass player as data
+        // set shouldUpdatePairing to false
+        shouldUpdatePairing = false;
+        // start MainActivity and pass player as data
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("player", player);
+        startActivity(intent);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO: set shouldUpdatePairing to true
+        // set shouldUpdatePairing to true
+        shouldUpdatePairing = true;
     }
 
     @Override
@@ -172,9 +236,10 @@ public class PairingActivity extends AppCompatActivity {
         super.onDestroy();
         handler.removeCallbacksAndMessages(null);
 
-        // TODO: set shouldUpdatePairing to false
-
-        // TODO: logout by calling close() function of SocketClient
+        // set shouldUpdatePairing to false
+        shouldUpdatePairing = false;
+        // logout by calling close() function of SocketClient
+        SocketClient.getInstance().close();
     }
 
 }

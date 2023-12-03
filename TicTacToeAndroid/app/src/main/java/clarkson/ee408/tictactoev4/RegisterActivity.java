@@ -40,22 +40,50 @@ public class RegisterActivity extends AppCompatActivity {
         // Initialize Gson with null serialization option
         gson = new GsonBuilder().serializeNulls().create();
         //Adding Handlers
-        //TODO: set an onclick listener to registerButton to call handleRegister()
-
-        //TODO: set an onclick listener to loginButton to call goBackLogin()
+        // set an onclick listener to registerButton to call handleRegister()
+        registerButton.setOnClickListener(view -> handleRegister());
+        // set an onclick listener to loginButton to call goBackLogin()
+        loginButton.setOnClickListener(view -> goBackLogin());
     }
 
     /**
      * Process registration input and pass it to {@link #submitRegistration(User)}
      */
     public void handleRegister() {
-        // TODO: declare local variables for username, password, confirmPassword and displayName. Initialize their values with their corresponding EditText
-
-        // TODO: verify that all fields are not empty before proceeding. Toast with the error message
-
-        // TODO: verify that password is the same af confirm password. Toast with the error message
-
-        // TODO: Create User object with username, display name and password and call submitRegistration()
+        // declare local variables for username, password, confirmPassword and displayName. Initialize their values with their corresponding EditText
+        String username = usernameField.getText().toString();
+        String displayName = displayNameField.getText().toString();
+        String password = passwordField.getText().toString();
+        String confirmPassword = confirmPasswordField.getText().toString();
+        // verify that all fields are not empty before proceeding. Toast with the error message
+        if(username.isEmpty())
+        {
+            Toast.makeText(this, "No username was given", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(displayName.isEmpty())
+        {
+            Toast.makeText(this, "No display name was given", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(password.isEmpty())
+        {
+            Toast.makeText(this, "No password was given", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(confirmPassword.isEmpty())
+        {
+            Toast.makeText(this, "Password was not confirmed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // verify that password is the same af confirm password. Toast with the error message
+        if(!password.equals(confirmPassword))
+        {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Create User object with username, display name and password and call submitRegistration()
+        submitRegistration(new User(username, password, displayName, false));
     }
 
     /**
@@ -63,14 +91,23 @@ public class RegisterActivity extends AppCompatActivity {
      * @param user the User to register
      */
     void submitRegistration(User user) {
-        //TODO: Send a REGISTER request to the server, if SUCCESS reponse, call goBackLogin(). Else, Toast the error message
+        // Send a REGISTER request to the server, if SUCCESS reponse, call goBackLogin(). Else, Toast the error message
+        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.REGISTER, gson.toJson(user)), Response.class);
+        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+        {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        goBackLogin();
+
     }
 
     /**
      * Change the activity to LoginActivity
      */
     private void goBackLogin() {
-        //TODO: Close this activity by calling finish(), it will automatically go back to its parent (i.e,. LoginActivity)
+        // Close this activity by calling finish(), it will automatically go back to its parent (i.e,. LoginActivity)
+        finish();
     }
 
 }

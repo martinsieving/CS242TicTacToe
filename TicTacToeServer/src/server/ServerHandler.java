@@ -192,7 +192,7 @@ public class ServerHandler extends Thread
             case ACCEPT_INVITATION:
                 return handleAcceptInvitation(gson.fromJson(request.getData(), Integer.class));
             case DECLINE_INVITATION:
-                return handleAcceptInvitation(gson.fromJson(request.getData(), Integer.class));
+                return handleDeclineInvitation(gson.fromJson(request.getData(), Integer.class));
             case ACKNOWLEDGE_RESPONSE:
                 return handleAcknowledgeResponse(gson.fromJson(request.getData(), Integer.class));
             case COMPLETE_GAME:
