@@ -1,6 +1,7 @@
 package clarkson.ee408.tictactoev4.client;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -63,7 +65,7 @@ public class SocketClient {
      * Can be accessed only the within the class (for singleton design pattern)
      */
     private SocketClient() {
-        String HOSTNAME = "localhost";
+        String HOSTNAME = "10.0.2.2";
         int PORT = 5000;
 
         gson = new GsonBuilder().serializeNulls().create();

@@ -18,6 +18,7 @@ import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
+import clarkson.ee408.tictactoev4.client.AppExecutors;
 import clarkson.ee408.tictactoev4.client.SocketClient;
 import clarkson.ee408.tictactoev4.model.Event;
 import clarkson.ee408.tictactoev4.model.User;
@@ -82,14 +83,21 @@ public class PairingActivity extends AppCompatActivity {
      */
     private void getPairingUpdate() {
         // Send an UPDATE_PAIRING request to the server. If SUCCESS call handlePairingUpdate(). Else, Toast the error
-        PairingResponse response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.UPDATE_PAIRING, ""), PairingResponse.class);
-        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
-        {
-            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        handlePairingUpdate(response);
-
+        AppExecutors.getInstance().networkIO().execute(()-> {
+            PairingResponse response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.UPDATE_PAIRING, ""), PairingResponse.class);
+            AppExecutors.getInstance().mainThread().execute(()-> {
+                if (response == null) {
+                    Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+                {
+                    Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                handlePairingUpdate(response);
+            });
+        });
     }
 
     /**
@@ -99,24 +107,32 @@ public class PairingActivity extends AppCompatActivity {
     private void handlePairingUpdate(PairingResponse response) {
         // handle availableUsers by calling updateAvailableUsers()
         updateAvailableUsers(response.getAvailableUsers());
-        // handle invitationResponse. First by sending acknowledgement calling sendAcknowledgement()
-        sendAcknowledgement(response.getInvitationResponse());
-        // If the invitationResponse is ACCEPTED, Toast an accept message and call beginGame
-        if(response.getInvitationResponse().getStatus() == Event.EventStatus.ACCEPTED)
+
+        if(response.getInvitationResponse() != null)
         {
-            Toast.makeText(this, "Game has been accepted", Toast.LENGTH_SHORT).show();
-            beginGame(response.getInvitationResponse(), 1);
-            return;
-        }
-        // If the invitationResponse is DECLINED, Toast a decline message
-        else if(response.getInvitationResponse().getStatus() == Event.EventStatus.DECLINED)
-        {
-            Toast.makeText(this, "Game has been declined", Toast.LENGTH_SHORT).show();
-            return;
+            // handle invitationResponse. First by sending acknowledgement calling sendAcknowledgement()
+            sendAcknowledgement(response.getInvitationResponse());
+
+            // If the invitationResponse is ACCEPTED, Toast an accept message and call beginGame
+            if(response.getInvitationResponse().getStatus() == Event.EventStatus.ACCEPTED)
+            {
+                Toast.makeText(this, "Game has been accepted", Toast.LENGTH_SHORT).show();
+                beginGame(response.getInvitationResponse(), 1);
+                return;
+            }
+            // If the invitationResponse is DECLINED, Toast a decline message
+            else if(response.getInvitationResponse().getStatus() == Event.EventStatus.DECLINED)
+            {
+                Toast.makeText(this, "Game has been declined", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
-        // handle invitation by calling createRespondAlertDialog()
-        createRespondAlertDialog(response.getInvitation());
+        if(response.getInvitation() != null)
+        {
+            // handle invitation by calling createRespondAlertDialog()
+            createRespondAlertDialog(response.getInvitation());
+        }
     }
 
     /**
@@ -142,13 +158,21 @@ public class PairingActivity extends AppCompatActivity {
      */
     private void sendGameInvitation(User userOpponent) {
         // Send an SEND_INVITATION request to the server. If SUCCESS Toast a success message. Else, Toast the error
-        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.SEND_INVITATION, userOpponent.getUsername()), Response.class);
-        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
-        {
-            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Toast.makeText(this, "Sent Game Invitation", Toast.LENGTH_SHORT).show();
+        AppExecutors.getInstance().networkIO().execute(()-> {
+            Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.SEND_INVITATION, userOpponent.getUsername()), Response.class);
+            AppExecutors.getInstance().mainThread().execute(()-> {
+                if (response == null) {
+                    Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+                {
+                    Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Toast.makeText(this, "Sent Game Invitation", Toast.LENGTH_SHORT).show();
+            });
+        });
     }
 
     /**
@@ -157,7 +181,9 @@ public class PairingActivity extends AppCompatActivity {
       */
     private void sendAcknowledgement(Event invitationResponse) {
         // Send an ACKNOWLEDGE_RESPONSE request to the server.
-        SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACKNOWLEDGE_RESPONSE, gson.toJson(invitationResponse.getEventId())), Response.class);
+        AppExecutors.getInstance().networkIO().execute(()-> {
+            SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACKNOWLEDGE_RESPONSE, gson.toJson(invitationResponse.getEventId())), Response.class);
+        });
     }
 
     /**
@@ -182,13 +208,21 @@ public class PairingActivity extends AppCompatActivity {
      */
     private void acceptInvitation(Event invitation) {
         // Send an ACCEPT_INVITATION request to the server. If SUCCESS beginGame() as player 2. Else, Toast the error
-        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACCEPT_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
-        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
-        {
-            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
-            return;
-        }
-        beginGame(invitation, 2);
+        AppExecutors.getInstance().networkIO().execute(()-> {
+            Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.ACCEPT_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
+            AppExecutors.getInstance().mainThread().execute(()-> {
+                if (response == null) {
+                    Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+                {
+                    Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                beginGame(invitation, 2);
+            });
+        });
     }
 
     /**
@@ -197,17 +231,25 @@ public class PairingActivity extends AppCompatActivity {
      */
     private void declineInvitation(Event invitation) {
         // Send a DECLINE_INVITATION request to the server. If SUCCESS response, Toast a message, else, Toast the error
-        Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.DECLINE_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
-        if(response.getStatus() != Response.ResponseStatus.SUCCESS)
-        {
-            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(this, "Declined Invitation", Toast.LENGTH_SHORT).show();
-        }
-        // set shouldUpdatePairing to true after DECLINE_INVITATION is sent.
-        shouldUpdatePairing = true;
+        AppExecutors.getInstance().networkIO().execute(()-> {
+            Response response = SocketClient.getInstance().sendRequest(new Request(Request.RequestType.DECLINE_INVITATION, gson.toJson(invitation.getEventId())), Response.class);
+            AppExecutors.getInstance().mainThread().execute(()-> {
+                if (response == null) {
+                    Toast.makeText(this, "no response from server", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(response.getStatus() != Response.ResponseStatus.SUCCESS)
+                {
+                    Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(this, "Declined Invitation", Toast.LENGTH_SHORT).show();
+                }
+                // set shouldUpdatePairing to true after DECLINE_INVITATION is sent.
+                shouldUpdatePairing = true;
+            });
+        });
     }
 
     /**
