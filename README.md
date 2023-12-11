@@ -1,6 +1,20 @@
 Alexander Odom
 Martin Sieving
 
+Milestone 4
+
+1.
+all tests passed, screenshots on Moodle.
+
+2.
+We must send a REQUEST_MOVE request even when it is the current users turn to move to determine if the game is still active.
+
+3.
+When player B's device closes the program will halt, calling onDestroy. This will send either a COMPLETE_GAME or an ABORT_GAME request to the server. From there the server will notify player A.
+
+4.
+It would be possible to design the board using xml as xml can be used to create and design elements, similar to html. Each cell of the board could be a button or a text view of some sort that displays either nothing, an x, or an o.
+
 Milestone 3
 
 1.

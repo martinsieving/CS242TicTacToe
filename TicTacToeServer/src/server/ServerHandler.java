@@ -268,6 +268,7 @@ public class ServerHandler extends Thread
             }
             else
             {
+                response.setActive(true);
                 response.setMove(-1);
             }
             DatabaseHelper.getInstance().updateEvent(event);
